@@ -44,7 +44,7 @@
 
 - (void)openViewer:(id)sender {
     self.viewer = [[TTImageViewerController alloc] init];
-    [self.viewer showImage:[UIImage imageNamed:@"img1"] fromView:self.button];
+    [self.viewer showImages:@[[UIImage imageNamed:@"img1"]] withInitialImage:[UIImage imageNamed:@"img1"] fromView:self.button];
 }
 
 @end

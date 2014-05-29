@@ -45,7 +45,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 @property (nonatomic, strong) UIView *fromView;
 @property (nonatomic, assign) CGRect fromRect;
-@property (nonatomic, weak) UIViewController *targetViewController;
 
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -188,15 +187,13 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 #pragma mark - Presenting and Dismissing
 
-- (void)showImage:(UIImage *)image fromView:(UIView *)fromView {
-	[self showImage:image fromView:fromView inViewController:nil];
+- (void)showImages:(NSArray *)images withInitialImage:(UIImage *)image fromView:(UIView *)fromView {
+	[self showImage:image fromView:fromView];
 }
 
-- (void)showImage:(UIImage *)image fromView:(UIView *)fromView inViewController:(UIViewController *)parentViewController {
+- (void)showImage:(UIImage *)image fromView:(UIView *)fromView {
 	self.fromView = fromView;
-	//self.targetViewController = parentViewController;
-	UIView *superview = (parentViewController) ? parentViewController.view : fromView.superview;
-	CGRect fromRect = [superview convertRect:fromView.frame toView:nil];
+	CGRect fromRect = [fromView.superview convertRect:fromView.frame toView:nil];
 
 	[self showImage:image fromRect:fromRect];
 }
@@ -265,33 +262,16 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	// register with the device that we want to know when the device orientation changes
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
-	if (self.targetViewController) {
-		[self willMoveToParentViewController:self.targetViewController];
-		if ([UIView instancesRespondToSelector:@selector(setTintAdjustmentMode:)]) {
-			self.targetViewController.view.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
-			[self.targetViewController.view tintColorDidChange];
-		}
-		[self.targetViewController addChildViewController:self];
-		[self.targetViewController.view addSubview:self.view];
+    if ([UIView instancesRespondToSelector:@selector(setTintAdjustmentMode:)]) {
+        self.keyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
+        [self.keyWindow tintColorDidChange];
+    }
+    [self.keyWindow addSubview:self.view];
 
-		if (self.snapshotView) {
-			[self.targetViewController.view insertSubview:self.snapshotView belowSubview:self.view];
-			[self.targetViewController.view insertSubview:self.blurredSnapshotView aboveSubview:self.snapshotView];
-		}
-	}
-	else {
-		// add this view to the main window if no targetViewController was set
-		if ([UIView instancesRespondToSelector:@selector(setTintAdjustmentMode:)]) {
-			self.keyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
-			[self.keyWindow tintColorDidChange];
-		}
-		[self.keyWindow addSubview:self.view];
-
-		if (self.snapshotView) {
-			[self.keyWindow insertSubview:self.snapshotView belowSubview:self.view];
-			[self.keyWindow insertSubview:self.blurredSnapshotView aboveSubview:self.snapshotView];
-		}
-	}
+    if (self.snapshotView) {
+        [self.keyWindow insertSubview:self.snapshotView belowSubview:self.view];
+        [self.keyWindow insertSubview:self.blurredSnapshotView aboveSubview:self.snapshotView];
+    }
 
 	[UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		self.backgroundView.alpha = 1.0f;
@@ -307,11 +287,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		}
 
 	} completion:^(BOOL finished) {
-		//[self.imageView addGestureRecognizer:self.pinchRecognizer];
-		if (self.targetViewController) {
-			[self didMoveToParentViewController:self.targetViewController];
-		}
-
 		if ([self.delegate respondsToSelector:@selector(mediaFocusViewControllerDidAppear:)]) {
 			[self.delegate mediaFocusViewControllerDidAppear:self];
 		}
@@ -498,20 +473,10 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	_hasLaidOut = NO;
 	[self.view removeFromSuperview];
 
-	if (self.targetViewController) {
-		if ([UIView instancesRespondToSelector:@selector(setTintAdjustmentMode:)]) {
-			self.targetViewController.view.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
-			[self.targetViewController.view tintColorDidChange];
-		}
-		[self willMoveToParentViewController:nil];
-		[self removeFromParentViewController];
-	}
-	else {
-		if ([UIWindow instancesRespondToSelector:@selector(setTintAdjustmentMode:)]) {
-			self.keyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
-			[self.keyWindow tintColorDidChange];
-		}
-	}
+    if ([UIWindow instancesRespondToSelector:@selector(setTintAdjustmentMode:)]) {
+        self.keyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
+        [self.keyWindow tintColorDidChange];
+    }
 
 	if (self.animator) {
 		[self.animator removeAllBehaviors];

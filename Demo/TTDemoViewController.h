@@ -1,13 +1,13 @@
 //
-//  TTImageViewer.m
+//  TTDemoViewController.h
 //  TTImageViewer
 //
 //  Created by Ian Leitch on 5/29/14.
 //  Copyright (c) 2014 Thumbtack. All rights reserved.
 //
 
-#import "TTImageViewer.h"
+#import <UIKit/UIKit.h>
 
-@implementation TTImageViewer
+@interface TTDemoViewController : UIViewController
 
 @end

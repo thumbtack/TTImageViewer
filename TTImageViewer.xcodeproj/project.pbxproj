@@ -8,14 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		3C20A8EA1937DA5B00709EE1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8E91937DA5B00709EE1 /* Foundation.framework */; };
-		3C20A8EF1937DA5B00709EE1 /* TTImageViewer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3C20A8EE1937DA5B00709EE1 /* TTImageViewer.h */; };
-		3C20A8F11937DA5B00709EE1 /* TTImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A8F01937DA5B00709EE1 /* TTImageViewer.m */; };
+		3C20A8EF1937DA5B00709EE1 /* TTImageViewerController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3C20A8EE1937DA5B00709EE1 /* TTImageViewerController.h */; };
+		3C20A8F11937DA5B00709EE1 /* TTImageViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A8F01937DA5B00709EE1 /* TTImageViewerController.m */; };
 		3C20A8F81937DA5B00709EE1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8F71937DA5B00709EE1 /* XCTest.framework */; };
 		3C20A8F91937DA5B00709EE1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8E91937DA5B00709EE1 /* Foundation.framework */; };
 		3C20A8FB1937DA5B00709EE1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8FA1937DA5B00709EE1 /* UIKit.framework */; };
 		3C20A8FE1937DA5B00709EE1 /* libTTImageViewer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8E61937DA5B00709EE1 /* libTTImageViewer.a */; };
 		3C20A9041937DA5B00709EE1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C20A9021937DA5B00709EE1 /* InfoPlist.strings */; };
 		3C20A9061937DA5B00709EE1 /* TTImageViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A9051937DA5B00709EE1 /* TTImageViewerTests.m */; };
+		3C20A9871937DE4100709EE1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8E91937DA5B00709EE1 /* Foundation.framework */; };
+		3C20A9881937DE4100709EE1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A9151937DCBB00709EE1 /* CoreGraphics.framework */; };
+		3C20A9891937DE4100709EE1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8FA1937DA5B00709EE1 /* UIKit.framework */; };
+		3C20A98F1937DE4100709EE1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C20A98D1937DE4100709EE1 /* InfoPlist.strings */; };
+		3C20A9911937DE4100709EE1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A9901937DE4100709EE1 /* main.m */; };
+		3C20A9951937DE4100709EE1 /* TTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A9941937DE4100709EE1 /* TTAppDelegate.m */; };
+		3C20A9971937DE4100709EE1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C20A9961937DE4100709EE1 /* Images.xcassets */; };
+		3C20A99D1937DE4100709EE1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8F71937DA5B00709EE1 /* XCTest.framework */; };
+		3C20A99E1937DE4100709EE1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8E91937DA5B00709EE1 /* Foundation.framework */; };
+		3C20A99F1937DE4100709EE1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8FA1937DA5B00709EE1 /* UIKit.framework */; };
+		3C20A9A71937DE4100709EE1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C20A9A51937DE4100709EE1 /* InfoPlist.strings */; };
+		3C20A9A91937DE4100709EE1 /* DemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A9A81937DE4100709EE1 /* DemoTests.m */; };
+		3C20A9B21937DE9100709EE1 /* TTDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A9B11937DE9100709EE1 /* TTDemoViewController.m */; };
+		3C20A9B31937E45000709EE1 /* TTImageViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A8F01937DA5B00709EE1 /* TTImageViewerController.m */; };
+		3C20A9B51937E6E400709EE1 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C20A9B41937E6E400709EE1 /* LICENSE */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +41,13 @@
 			remoteGlobalIDString = 3C20A8E51937DA5B00709EE1;
 			remoteInfo = TTImageViewer;
 		};
+		3C20A9A01937DE4100709EE1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C20A8DE1937DA5B00709EE1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C20A9851937DE4100709EE1;
+			remoteInfo = Demo;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,7 +57,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				3C20A8EF1937DA5B00709EE1 /* TTImageViewer.h in CopyFiles */,
+				3C20A8EF1937DA5B00709EE1 /* TTImageViewerController.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,14 +67,30 @@
 		3C20A8E61937DA5B00709EE1 /* libTTImageViewer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTTImageViewer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C20A8E91937DA5B00709EE1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3C20A8ED1937DA5B00709EE1 /* TTImageViewer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTImageViewer-Prefix.pch"; sourceTree = "<group>"; };
-		3C20A8EE1937DA5B00709EE1 /* TTImageViewer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTImageViewer.h; sourceTree = "<group>"; };
-		3C20A8F01937DA5B00709EE1 /* TTImageViewer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTImageViewer.m; sourceTree = "<group>"; };
+		3C20A8EE1937DA5B00709EE1 /* TTImageViewerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTImageViewerController.h; sourceTree = "<group>"; };
+		3C20A8F01937DA5B00709EE1 /* TTImageViewerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTImageViewerController.m; sourceTree = "<group>"; };
 		3C20A8F61937DA5B00709EE1 /* TTImageViewerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TTImageViewerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C20A8F71937DA5B00709EE1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		3C20A8FA1937DA5B00709EE1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		3C20A9011937DA5B00709EE1 /* TTImageViewerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TTImageViewerTests-Info.plist"; sourceTree = "<group>"; };
 		3C20A9031937DA5B00709EE1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3C20A9051937DA5B00709EE1 /* TTImageViewerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTImageViewerTests.m; sourceTree = "<group>"; };
+		3C20A9151937DCBB00709EE1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3C20A9861937DE4100709EE1 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C20A98C1937DE4100709EE1 /* Demo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Demo-Info.plist"; sourceTree = "<group>"; };
+		3C20A98E1937DE4100709EE1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3C20A9901937DE4100709EE1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3C20A9921937DE4100709EE1 /* Demo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Prefix.pch"; sourceTree = "<group>"; };
+		3C20A9931937DE4100709EE1 /* TTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTAppDelegate.h; sourceTree = "<group>"; };
+		3C20A9941937DE4100709EE1 /* TTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTAppDelegate.m; sourceTree = "<group>"; };
+		3C20A9961937DE4100709EE1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		3C20A99C1937DE4100709EE1 /* DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C20A9A41937DE4100709EE1 /* DemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DemoTests-Info.plist"; sourceTree = "<group>"; };
+		3C20A9A61937DE4100709EE1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3C20A9A81937DE4100709EE1 /* DemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoTests.m; sourceTree = "<group>"; };
+		3C20A9B01937DE9100709EE1 /* TTDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDemoViewController.h; sourceTree = "<group>"; };
+		3C20A9B11937DE9100709EE1 /* TTDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDemoViewController.m; sourceTree = "<group>"; };
+		3C20A9B41937E6E400709EE1 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,14 +113,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3C20A9831937DE4100709EE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A9881937DE4100709EE1 /* CoreGraphics.framework in Frameworks */,
+				3C20A9891937DE4100709EE1 /* UIKit.framework in Frameworks */,
+				3C20A9871937DE4100709EE1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C20A9991937DE4100709EE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A99D1937DE4100709EE1 /* XCTest.framework in Frameworks */,
+				3C20A99F1937DE4100709EE1 /* UIKit.framework in Frameworks */,
+				3C20A99E1937DE4100709EE1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		3C20A8DD1937DA5B00709EE1 = {
 			isa = PBXGroup;
 			children = (
+				3C20A9B41937E6E400709EE1 /* LICENSE */,
 				3C20A8EB1937DA5B00709EE1 /* TTImageViewer */,
 				3C20A8FF1937DA5B00709EE1 /* TTImageViewerTests */,
+				3C20A98A1937DE4100709EE1 /* Demo */,
+				3C20A9A21937DE4100709EE1 /* DemoTests */,
 				3C20A8E81937DA5B00709EE1 /* Frameworks */,
 				3C20A8E71937DA5B00709EE1 /* Products */,
 			);
@@ -93,6 +154,8 @@
 			children = (
 				3C20A8E61937DA5B00709EE1 /* libTTImageViewer.a */,
 				3C20A8F61937DA5B00709EE1 /* TTImageViewerTests.xctest */,
+				3C20A9861937DE4100709EE1 /* Demo.app */,
+				3C20A99C1937DE4100709EE1 /* DemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,6 +166,7 @@
 				3C20A8E91937DA5B00709EE1 /* Foundation.framework */,
 				3C20A8F71937DA5B00709EE1 /* XCTest.framework */,
 				3C20A8FA1937DA5B00709EE1 /* UIKit.framework */,
+				3C20A9151937DCBB00709EE1 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -110,8 +174,8 @@
 		3C20A8EB1937DA5B00709EE1 /* TTImageViewer */ = {
 			isa = PBXGroup;
 			children = (
-				3C20A8EE1937DA5B00709EE1 /* TTImageViewer.h */,
-				3C20A8F01937DA5B00709EE1 /* TTImageViewer.m */,
+				3C20A8EE1937DA5B00709EE1 /* TTImageViewerController.h */,
+				3C20A8F01937DA5B00709EE1 /* TTImageViewerController.m */,
 				3C20A8EC1937DA5B00709EE1 /* Supporting Files */,
 			);
 			path = TTImageViewer;
@@ -139,6 +203,48 @@
 			children = (
 				3C20A9011937DA5B00709EE1 /* TTImageViewerTests-Info.plist */,
 				3C20A9021937DA5B00709EE1 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3C20A98A1937DE4100709EE1 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A9931937DE4100709EE1 /* TTAppDelegate.h */,
+				3C20A9941937DE4100709EE1 /* TTAppDelegate.m */,
+				3C20A9961937DE4100709EE1 /* Images.xcassets */,
+				3C20A98B1937DE4100709EE1 /* Supporting Files */,
+				3C20A9B01937DE9100709EE1 /* TTDemoViewController.h */,
+				3C20A9B11937DE9100709EE1 /* TTDemoViewController.m */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		3C20A98B1937DE4100709EE1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A98C1937DE4100709EE1 /* Demo-Info.plist */,
+				3C20A98D1937DE4100709EE1 /* InfoPlist.strings */,
+				3C20A9901937DE4100709EE1 /* main.m */,
+				3C20A9921937DE4100709EE1 /* Demo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3C20A9A21937DE4100709EE1 /* DemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A9A81937DE4100709EE1 /* DemoTests.m */,
+				3C20A9A31937DE4100709EE1 /* Supporting Files */,
+			);
+			path = DemoTests;
+			sourceTree = "<group>";
+		};
+		3C20A9A31937DE4100709EE1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A9A41937DE4100709EE1 /* DemoTests-Info.plist */,
+				3C20A9A51937DE4100709EE1 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -181,6 +287,41 @@
 			productReference = 3C20A8F61937DA5B00709EE1 /* TTImageViewerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		3C20A9851937DE4100709EE1 /* Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C20A9AA1937DE4100709EE1 /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildPhases = (
+				3C20A9821937DE4100709EE1 /* Sources */,
+				3C20A9831937DE4100709EE1 /* Frameworks */,
+				3C20A9841937DE4100709EE1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Demo;
+			productName = Demo;
+			productReference = 3C20A9861937DE4100709EE1 /* Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3C20A99B1937DE4100709EE1 /* DemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C20A9AD1937DE4100709EE1 /* Build configuration list for PBXNativeTarget "DemoTests" */;
+			buildPhases = (
+				3C20A9981937DE4100709EE1 /* Sources */,
+				3C20A9991937DE4100709EE1 /* Frameworks */,
+				3C20A99A1937DE4100709EE1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3C20A9A11937DE4100709EE1 /* PBXTargetDependency */,
+			);
+			name = DemoTests;
+			productName = DemoTests;
+			productReference = 3C20A99C1937DE4100709EE1 /* DemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -189,6 +330,14 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Thumbtack;
+				TargetAttributes = {
+					3C20A8F51937DA5B00709EE1 = {
+						TestTargetID = 3C20A9851937DE4100709EE1;
+					};
+					3C20A99B1937DE4100709EE1 = {
+						TestTargetID = 3C20A9851937DE4100709EE1;
+					};
+				};
 			};
 			buildConfigurationList = 3C20A8E11937DA5B00709EE1 /* Build configuration list for PBXProject "TTImageViewer" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -204,6 +353,8 @@
 			targets = (
 				3C20A8E51937DA5B00709EE1 /* TTImageViewer */,
 				3C20A8F51937DA5B00709EE1 /* TTImageViewerTests */,
+				3C20A9851937DE4100709EE1 /* Demo */,
+				3C20A99B1937DE4100709EE1 /* DemoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -217,6 +368,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3C20A9841937DE4100709EE1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A9B51937E6E400709EE1 /* LICENSE in Resources */,
+				3C20A98F1937DE4100709EE1 /* InfoPlist.strings in Resources */,
+				3C20A9971937DE4100709EE1 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C20A99A1937DE4100709EE1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A9A71937DE4100709EE1 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -224,7 +393,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C20A8F11937DA5B00709EE1 /* TTImageViewer.m in Sources */,
+				3C20A8F11937DA5B00709EE1 /* TTImageViewerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +405,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3C20A9821937DE4100709EE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A9951937DE4100709EE1 /* TTAppDelegate.m in Sources */,
+				3C20A9B31937E45000709EE1 /* TTImageViewerController.m in Sources */,
+				3C20A9911937DE4100709EE1 /* main.m in Sources */,
+				3C20A9B21937DE9100709EE1 /* TTDemoViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C20A9981937DE4100709EE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A9A91937DE4100709EE1 /* DemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -244,6 +432,11 @@
 			target = 3C20A8E51937DA5B00709EE1 /* TTImageViewer */;
 			targetProxy = 3C20A8FC1937DA5B00709EE1 /* PBXContainerItemProxy */;
 		};
+		3C20A9A11937DE4100709EE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C20A9851937DE4100709EE1 /* Demo */;
+			targetProxy = 3C20A9A01937DE4100709EE1 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -251,6 +444,22 @@
 			isa = PBXVariantGroup;
 			children = (
 				3C20A9031937DA5B00709EE1 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		3C20A98D1937DE4100709EE1 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C20A98E1937DE4100709EE1 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		3C20A9A51937DE4100709EE1 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C20A9A61937DE4100709EE1 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -353,6 +562,7 @@
 		3C20A90D1937DA5B00709EE1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -366,6 +576,7 @@
 				);
 				INFOPLIST_FILE = "TTImageViewerTests/TTImageViewerTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -373,6 +584,7 @@
 		3C20A90E1937DA5B00709EE1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -382,6 +594,89 @@
 				GCC_PREFIX_HEADER = "TTImageViewer/TTImageViewer-Prefix.pch";
 				INFOPLIST_FILE = "TTImageViewerTests/TTImageViewerTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		3C20A9AB1937DE4100709EE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Demo/Demo-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Demo/Demo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		3C20A9AC1937DE4100709EE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Demo/Demo-Prefix.pch";
+				INFOPLIST_FILE = "Demo/Demo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		3C20A9AE1937DE4100709EE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Demo/Demo-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "DemoTests/DemoTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		3C20A9AF1937DE4100709EE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Demo/Demo-Prefix.pch";
+				INFOPLIST_FILE = "DemoTests/DemoTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -405,12 +700,30 @@
 				3C20A90B1937DA5B00709EE1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3C20A90C1937DA5B00709EE1 /* Build configuration list for PBXNativeTarget "TTImageViewerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3C20A90D1937DA5B00709EE1 /* Debug */,
 				3C20A90E1937DA5B00709EE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C20A9AA1937DE4100709EE1 /* Build configuration list for PBXNativeTarget "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C20A9AB1937DE4100709EE1 /* Debug */,
+				3C20A9AC1937DE4100709EE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3C20A9AD1937DE4100709EE1 /* Build configuration list for PBXNativeTarget "DemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C20A9AE1937DE4100709EE1 /* Debug */,
+				3C20A9AF1937DE4100709EE1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

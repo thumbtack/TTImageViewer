@@ -64,10 +64,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 @property (nonatomic, strong) UITapGestureRecognizer *photoTapRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *photoLongPressRecognizer;
 
-@property (nonatomic, strong) UIActivityIndicatorView *loadingView;
-@property (nonatomic, strong) NSURLConnection *urlConnection;
-@property (nonatomic, strong) NSMutableData *urlData;
-
 @property (nonatomic, strong) UIView *blurredSnapshotView;
 @property (nonatomic, strong) UIView *snapshotView;
 
@@ -189,14 +185,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		[self.imageView addGestureRecognizer:self.photoTapRecognizer];
 	}
 }
-
-- (void)cancelURLConnectionIfAny {
-    if (self.loadingView) {
-        [self.loadingView stopAnimating];
-        if (self.loadingView.superview) [self.loadingView removeFromSuperview];
-    }
-    if (self.urlConnection) [self.urlConnection cancel];
-};
 
 #pragma mark - Presenting and Dismissing
 
@@ -328,53 +316,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 			[self.delegate mediaFocusViewControllerDidAppear:self];
 		}
 	}];
-}
-
-- (void)showImageFromURL:(NSURL *)url fromView:(UIView *)fromView {
-	[self showImageFromURL:url fromView:fromView inViewController:nil];
-}
-
-- (void)showImageFromURL:(NSURL *)url fromView:(UIView *)fromView inViewController:(UIViewController *)parentViewController {
-	self.fromView = fromView;
-	//self.targetViewController = parentViewController;
-
-	UIView *superview = (parentViewController) ? parentViewController.view : fromView.superview;
-	CGRect fromRect = [superview convertRect:fromView.frame toView:nil];
-
-	[self showImageFromURL:url fromRect:fromRect];
-}
-
-- (void)showImageFromURL:(NSURL *)url fromRect:(CGRect)fromRect {
-	self.fromRect = fromRect;
-
-	// cancel any outstanding requests if we have one
-	[self cancelURLConnectionIfAny];
-
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-	if (self.requestHTTPHeaders.count > 0) {
-		for (NSString *key in self.requestHTTPHeaders) {
-			NSString *value = [self.requestHTTPHeaders valueForKey:key];
-			[request setValue:value forHTTPHeaderField:key];
-		}
-	}
-
-	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-	self.urlConnection = connection;
-
-	// stores data as it's loaded from the request
-	self.urlData = [[NSMutableData alloc] init];
-
-	// show loading indicator on fromView
-	if (!self.loadingView) {
-		self.loadingView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 30.0, 30.0)];
-	}
-	if (self.fromView) {
-		[self.fromView addSubview:self.loadingView];
-		self.loadingView.center = CGPointMake(CGRectGetWidth(self.fromView.frame) / 2.0, CGRectGetHeight(self.fromView.frame) / 2.0);
-	}
-
-	[self.loadingView startAnimating];
-	[self.urlConnection start];
 }
 
 - (void)dismissAfterPush {
@@ -737,63 +678,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	shouldRecognize = shouldRecognize && !([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]);
 
 	return shouldRecognize;
-}
-
-#pragma mark - NSURLConnectionDelegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[self.urlData appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	[self.loadingView stopAnimating];
-	[self.loadingView removeFromSuperview];
-
-	if (self.urlData) {
-		NSString *urlPath = connection.currentRequest.URL.absoluteString;
-		__block UIImage *image;
-		__block UIImage *staticImageForGif;
-
-		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-			// determine if the loaded url is an animated GIF, and setup accordingly if so
-			if ([[urlPath substringFromIndex:[urlPath length] - 3] isEqualToString:@"gif"]) {
-				staticImageForGif = [UIImage imageWithData:self.urlData];
-				image = [UIImage tt_animatedImageWithAnimatedGIFData:self.urlData];
-			}
-			else {
-				image = [UIImage imageWithData:self.urlData];
-			}
-
-			dispatch_async(dispatch_get_main_queue(), ^{
-				// sometimes the server can return bad or corrupt image data which will result in a crash if we don't throw an error here
-				if (!image) {
-					NSString *errorDescription = [NSString stringWithFormat:@"Bad or corrupt image data for %@", urlPath];
-					NSError *error = [NSError errorWithDomain:@"com.thumbtack.TTImageViewerController" code:100 userInfo:@{NSLocalizedDescriptionKey: errorDescription}];
-					if ([self.delegate respondsToSelector:@selector(mediaFocusViewController:didFailLoadingImageWithError:)]) {
-						[self.delegate mediaFocusViewController:self didFailLoadingImageWithError:error];
-					}
-					return;
-				}
-
-				// set the initial image to the static version of the GIF for the present animation
-				if (staticImageForGif) {
-					self.imageView.image = staticImageForGif;
-				}
-
-				[self showImage:image fromRect:self.fromRect];
-
-				if ([self.delegate respondsToSelector:@selector(mediaFocusViewController:didFinishLoadingImage:)]) {
-					[self.delegate mediaFocusViewController:self didFinishLoadingImage:image];
-				}
-			});
-		});
-	}
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	if ([self.delegate respondsToSelector:@selector(mediaFocusViewController:didFailLoadingImageWithError:)]) {
-		[self.delegate mediaFocusViewController:self didFailLoadingImageWithError:error];
-	}
 }
 
 #pragma mark - Orientation Helpers
@@ -1226,10 +1110,6 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
 
 + (UIImage *)tt_animatedImageWithAnimatedGIFData:(NSData *)data {
 	return animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceCreateWithData(toCF data, NULL));
-}
-
-+ (UIImage *)tt_animatedImageWithAnimatedGIFURL:(NSURL *)url {
-	return animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceCreateWithURL(toCF url, NULL));
 }
 
 @end

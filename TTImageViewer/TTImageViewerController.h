@@ -30,25 +30,9 @@
  */
 - (void)mediaFocusViewControllerDidDisappear:(TTImageViewerController *)mediaFocusViewController;
 
-/**
- *  Tells the delegate that the remote image needed for presentation has successfully loaded.
- *
- *  @param mediaFocusViewController The instance that triggered the event.
- *  @param image                    The image that was successfully loaded and used for the focus view.
- */
-- (void)mediaFocusViewController:(TTImageViewerController *)mediaFocusViewController didFinishLoadingImage:(UIImage *)image;
-
-/**
- *  Tells the delegate that there was an error when requesting the remote image needed for presentation.
- *
- *  @param mediaFocusViewController The instance that triggered the event.
- *  @param error                    The error returned by the internal request.
- */
-- (void)mediaFocusViewController:(TTImageViewerController *)mediaFocusViewController didFailLoadingImageWithError:(NSError *)error;
-
 @end
 
-@interface TTImageViewerController : UIViewController <UIDynamicAnimatorDelegate, UIGestureRecognizerDelegate, NSURLConnectionDataDelegate>
+@interface TTImageViewerController : UIViewController <UIDynamicAnimatorDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, assign) BOOL shouldBlurBackground;
 @property (nonatomic, assign) BOOL parallaxEnabled;
@@ -63,9 +47,6 @@
 @property (nonatomic, assign) BOOL shouldRotateToDeviceOrientation;
 
 @property (nonatomic, weak) id<TTImageViewerControllerDelegate> delegate;
-
-// HTTP header values included in URL requests
-@property (nonatomic, strong) NSDictionary *requestHTTPHeaders;
 
 /**
  *  Convenience method for not using a parentViewController.
@@ -82,21 +63,6 @@
 - (void)showImage:(UIImage *)image fromRect:(CGRect)fromRect;
 
 /**
- *  Convenience method for not using a parentViewController.
- *  @see showImageFromURL:fromView:inViewController
- */
-- (void)showImageFromURL:(NSURL *)url fromView:(UIView *)fromView;
-
-/**
- *  Presents media from a specific CGRect after being requested from the specified URL. The `TTImageViewerController` will
- *	only present its view once the image has been successfully loaded.
- *
- *  @param url      The remote url of the full size image that will be requested and displayed.
- *  @param fromRect The CGRect from which the image should be presented from.
- */
-- (void)showImageFromURL:(NSURL *)url fromRect:(CGRect)fromRect;
-
-/**
  *  Shows a full size image over the current view or main window. The image should be cached locally on the device, in the app
  *	bundle or an image generated from `NSData`.
  *
@@ -106,24 +72,8 @@
  */
 - (void)showImage:(UIImage *)image fromView:(UIView *)fromView inViewController:(UIViewController *)parentViewController;
 
-/**
- *  Shows a full size image over the current view or main window after being requested from the specified URL. The `TTImageViewerController`
- *	will only present its view once the image has been successfully loaded.
- *
- *  @param url                  The remote url of the full size image that will be requested and displayed.
- *  @param fromView             The view from which the presentation animation originates.
- *  @param parentViewController The parent view controller containing the `fromView`. If `parentViewController` is `nil`, then the focus view will be added to the main `UIWindow` instance.
- */
-- (void)showImageFromURL:(NSURL *)url fromView:(UIView *)fromView inViewController:(UIViewController *)parentViewController;
-
-/**
- *  Stop downloading the image (useful when closing a window while the image is downloading)
- */
-- (void)cancelURLConnectionIfAny;
-
 @end
 
 @interface UIImage (TTAnimatedGIF)
 + (UIImage *)tt_animatedImageWithAnimatedGIFData:(NSData *)data;
-+ (UIImage *)tt_animatedImageWithAnimatedGIFURL:(NSURL *)url;
 @end

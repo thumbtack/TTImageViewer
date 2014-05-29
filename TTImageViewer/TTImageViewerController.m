@@ -393,28 +393,9 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		[self.scrollView setZoomScale:1.0f animated:NO];
 	}
 
-	CGRect targetFrame = [self.view convertRect:self.fromView.frame fromView:nil];
-	if (!CGRectIsEmpty(self.fromRect)) {
-		targetFrame = self.fromRect;
-	}
-
-	[UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-		self.imageView.frame = targetFrame;
-		if (!CGRectIsEmpty(self.fromRect)) {
-			self.imageView.frame = self.fromRect;
-		}
-		else {
-			self.imageView.frame = [self.view convertRect:self.fromView.frame fromView:nil];
-		}
-		//self.imageView.alpha = 0.0f;
-		self.backgroundView.alpha = 0.0f;
-	} completion:^(BOOL finished) {
-		[self cleanup];
-	}];
-	// offset image fade out slightly than background/frame animation
-	[UIView animateWithDuration:__animationDuration - 0.1 delay:0.05 options:UIViewAnimationOptionCurveEaseOut animations:^{
-		self.imageView.alpha = 0.0f;
-	} completion:nil];
+    self.imageView.alpha = 0.f;
+    self.backgroundView.alpha = 0.0f;
+    [self cleanup];
 }
 
 #pragma mark - Private Methods

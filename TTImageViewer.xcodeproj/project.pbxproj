@@ -1,0 +1,420 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3C20A8EA1937DA5B00709EE1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8E91937DA5B00709EE1 /* Foundation.framework */; };
+		3C20A8EF1937DA5B00709EE1 /* TTImageViewer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3C20A8EE1937DA5B00709EE1 /* TTImageViewer.h */; };
+		3C20A8F11937DA5B00709EE1 /* TTImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A8F01937DA5B00709EE1 /* TTImageViewer.m */; };
+		3C20A8F81937DA5B00709EE1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8F71937DA5B00709EE1 /* XCTest.framework */; };
+		3C20A8F91937DA5B00709EE1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8E91937DA5B00709EE1 /* Foundation.framework */; };
+		3C20A8FB1937DA5B00709EE1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8FA1937DA5B00709EE1 /* UIKit.framework */; };
+		3C20A8FE1937DA5B00709EE1 /* libTTImageViewer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C20A8E61937DA5B00709EE1 /* libTTImageViewer.a */; };
+		3C20A9041937DA5B00709EE1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C20A9021937DA5B00709EE1 /* InfoPlist.strings */; };
+		3C20A9061937DA5B00709EE1 /* TTImageViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A9051937DA5B00709EE1 /* TTImageViewerTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3C20A8FC1937DA5B00709EE1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C20A8DE1937DA5B00709EE1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C20A8E51937DA5B00709EE1;
+			remoteInfo = TTImageViewer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3C20A8E41937DA5B00709EE1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				3C20A8EF1937DA5B00709EE1 /* TTImageViewer.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		3C20A8E61937DA5B00709EE1 /* libTTImageViewer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTTImageViewer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C20A8E91937DA5B00709EE1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		3C20A8ED1937DA5B00709EE1 /* TTImageViewer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTImageViewer-Prefix.pch"; sourceTree = "<group>"; };
+		3C20A8EE1937DA5B00709EE1 /* TTImageViewer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTImageViewer.h; sourceTree = "<group>"; };
+		3C20A8F01937DA5B00709EE1 /* TTImageViewer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTImageViewer.m; sourceTree = "<group>"; };
+		3C20A8F61937DA5B00709EE1 /* TTImageViewerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TTImageViewerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C20A8F71937DA5B00709EE1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		3C20A8FA1937DA5B00709EE1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		3C20A9011937DA5B00709EE1 /* TTImageViewerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TTImageViewerTests-Info.plist"; sourceTree = "<group>"; };
+		3C20A9031937DA5B00709EE1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3C20A9051937DA5B00709EE1 /* TTImageViewerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTImageViewerTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3C20A8E31937DA5B00709EE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A8EA1937DA5B00709EE1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C20A8F31937DA5B00709EE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A8F81937DA5B00709EE1 /* XCTest.framework in Frameworks */,
+				3C20A8FE1937DA5B00709EE1 /* libTTImageViewer.a in Frameworks */,
+				3C20A8FB1937DA5B00709EE1 /* UIKit.framework in Frameworks */,
+				3C20A8F91937DA5B00709EE1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3C20A8DD1937DA5B00709EE1 = {
+			isa = PBXGroup;
+			children = (
+				3C20A8EB1937DA5B00709EE1 /* TTImageViewer */,
+				3C20A8FF1937DA5B00709EE1 /* TTImageViewerTests */,
+				3C20A8E81937DA5B00709EE1 /* Frameworks */,
+				3C20A8E71937DA5B00709EE1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3C20A8E71937DA5B00709EE1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A8E61937DA5B00709EE1 /* libTTImageViewer.a */,
+				3C20A8F61937DA5B00709EE1 /* TTImageViewerTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3C20A8E81937DA5B00709EE1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A8E91937DA5B00709EE1 /* Foundation.framework */,
+				3C20A8F71937DA5B00709EE1 /* XCTest.framework */,
+				3C20A8FA1937DA5B00709EE1 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3C20A8EB1937DA5B00709EE1 /* TTImageViewer */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A8EE1937DA5B00709EE1 /* TTImageViewer.h */,
+				3C20A8F01937DA5B00709EE1 /* TTImageViewer.m */,
+				3C20A8EC1937DA5B00709EE1 /* Supporting Files */,
+			);
+			path = TTImageViewer;
+			sourceTree = "<group>";
+		};
+		3C20A8EC1937DA5B00709EE1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A8ED1937DA5B00709EE1 /* TTImageViewer-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3C20A8FF1937DA5B00709EE1 /* TTImageViewerTests */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A9051937DA5B00709EE1 /* TTImageViewerTests.m */,
+				3C20A9001937DA5B00709EE1 /* Supporting Files */,
+			);
+			path = TTImageViewerTests;
+			sourceTree = "<group>";
+		};
+		3C20A9001937DA5B00709EE1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3C20A9011937DA5B00709EE1 /* TTImageViewerTests-Info.plist */,
+				3C20A9021937DA5B00709EE1 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3C20A8E51937DA5B00709EE1 /* TTImageViewer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C20A9091937DA5B00709EE1 /* Build configuration list for PBXNativeTarget "TTImageViewer" */;
+			buildPhases = (
+				3C20A8E21937DA5B00709EE1 /* Sources */,
+				3C20A8E31937DA5B00709EE1 /* Frameworks */,
+				3C20A8E41937DA5B00709EE1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TTImageViewer;
+			productName = TTImageViewer;
+			productReference = 3C20A8E61937DA5B00709EE1 /* libTTImageViewer.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		3C20A8F51937DA5B00709EE1 /* TTImageViewerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C20A90C1937DA5B00709EE1 /* Build configuration list for PBXNativeTarget "TTImageViewerTests" */;
+			buildPhases = (
+				3C20A8F21937DA5B00709EE1 /* Sources */,
+				3C20A8F31937DA5B00709EE1 /* Frameworks */,
+				3C20A8F41937DA5B00709EE1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3C20A8FD1937DA5B00709EE1 /* PBXTargetDependency */,
+			);
+			name = TTImageViewerTests;
+			productName = TTImageViewerTests;
+			productReference = 3C20A8F61937DA5B00709EE1 /* TTImageViewerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3C20A8DE1937DA5B00709EE1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Thumbtack;
+			};
+			buildConfigurationList = 3C20A8E11937DA5B00709EE1 /* Build configuration list for PBXProject "TTImageViewer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 3C20A8DD1937DA5B00709EE1;
+			productRefGroup = 3C20A8E71937DA5B00709EE1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3C20A8E51937DA5B00709EE1 /* TTImageViewer */,
+				3C20A8F51937DA5B00709EE1 /* TTImageViewerTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3C20A8F41937DA5B00709EE1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A9041937DA5B00709EE1 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3C20A8E21937DA5B00709EE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A8F11937DA5B00709EE1 /* TTImageViewer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C20A8F21937DA5B00709EE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C20A9061937DA5B00709EE1 /* TTImageViewerTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3C20A8FD1937DA5B00709EE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C20A8E51937DA5B00709EE1 /* TTImageViewer */;
+			targetProxy = 3C20A8FC1937DA5B00709EE1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3C20A9021937DA5B00709EE1 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C20A9031937DA5B00709EE1 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3C20A9071937DA5B00709EE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		3C20A9081937DA5B00709EE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3C20A90A1937DA5B00709EE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TTImageViewer.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTImageViewer/TTImageViewer-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		3C20A90B1937DA5B00709EE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TTImageViewer.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTImageViewer/TTImageViewer-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		3C20A90D1937DA5B00709EE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTImageViewer/TTImageViewer-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "TTImageViewerTests/TTImageViewerTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		3C20A90E1937DA5B00709EE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTImageViewer/TTImageViewer-Prefix.pch";
+				INFOPLIST_FILE = "TTImageViewerTests/TTImageViewerTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3C20A8E11937DA5B00709EE1 /* Build configuration list for PBXProject "TTImageViewer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C20A9071937DA5B00709EE1 /* Debug */,
+				3C20A9081937DA5B00709EE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C20A9091937DA5B00709EE1 /* Build configuration list for PBXNativeTarget "TTImageViewer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C20A90A1937DA5B00709EE1 /* Debug */,
+				3C20A90B1937DA5B00709EE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3C20A90C1937DA5B00709EE1 /* Build configuration list for PBXNativeTarget "TTImageViewerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C20A90D1937DA5B00709EE1 /* Debug */,
+				3C20A90E1937DA5B00709EE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3C20A8DE1937DA5B00709EE1 /* Project object */;
+}

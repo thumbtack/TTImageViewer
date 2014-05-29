@@ -59,9 +59,6 @@
 // determines whether or not view should be dismissed when the container view is tapped within bounds of image view
 @property (nonatomic, assign) BOOL shouldDismissOnImageTap;
 
-// determines if photo action sheet should appear with a long press on the photo (default NO)
-@property (nonatomic, assign) BOOL shouldShowPhotoActions;
-
 //determines if view should rotate when the device orientation changes (default YES)
 @property (nonatomic, assign) BOOL shouldRotateToDeviceOrientation;
 

@@ -66,6 +66,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 @property (nonatomic, strong) UIView *snapshotView;
 
 @property (nonatomic, strong) NSArray *images;
+@property (nonatomic, strong) UIPageControl *pageControl;
 
 @end
 
@@ -134,6 +135,14 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	}
 	[self.containerView addSubview:self.imageView];
 
+    CGFloat pageControlHeight = 20.f;
+    CGFloat pageControlBottomMargin = 5.f;
+    CGFloat y = self.keyWindow.frame.size.height - pageControlHeight - pageControlBottomMargin;
+    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, y, self.keyWindow.frame.size.width, 20)];
+    self.pageControl.alpha = 0.f;
+
+    [self.view addSubview:self.pageControl];
+
 	/* setup gesture recognizers */
 	// double tap gesture to return scaled image back to center for easier dismissal
 	self.doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTapGesture:)];
@@ -174,7 +183,10 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 #pragma mark - Presenting and Dismissing
 
 - (void)showImages:(NSArray *)images withInitialImage:(UIImage *)initialImage fromView:(UIView *)fromView {
+	[self view]; // make sure view has loaded first
     self.images = images;
+    self.pageControl.numberOfPages = [self.images count];
+    self.pageControl.currentPage = [self.images indexOfObject:initialImage];
 	[self showImage:initialImage fromView:fromView];
 }
 
@@ -262,6 +274,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 	[UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		self.backgroundView.alpha = 1.0f;
+        self.pageControl.alpha = 1.0f;
 		self.imageView.alpha = 1.0f;
 		self.imageView.frame = targetRect;
 
@@ -295,6 +308,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
     if (idx >= 0 && idx < [self.images count]) {
         self.imageView.image = self.images[idx];
+        self.pageControl.currentPage = idx;
 
         CGRect frame = _originalFrame;
         CGFloat x = left ? self.imageView.superview.frame.size.width : -frame.size.width;
@@ -305,6 +319,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
         [self returnToCenter];
     } else {
         [self hideSnapshotView];
+        self.pageControl.hidden = YES;
 
         [UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             self.backgroundView.alpha = 0.0f;

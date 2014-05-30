@@ -58,18 +58,20 @@ task :release do
   sh "rake spec"
 
   puts "* Linting the podspec"
-  sh "pod lib lint"
+  sh "pod lib lint --quick"
 
   # Then release
   sh "git commit #{podspec_path} CHANGELOG.md -m 'Release #{spec_version}' --allow-empty"
   sh "git tag -a #{spec_version} -m 'Release #{spec_version}'"
   sh "git push origin master"
   sh "git push origin --tags"
-  if repo == "master"
-    sh "pod trunk push #{podspec_path}"
-  else
-    sh "pod repo push #{repo} #{podspec_path}"
-  end
+
+  puts "*** Skipping pod push."
+  # if repo == "master"
+  #   sh "pod trunk push #{podspec_path}"
+  # else
+  #   sh "pod repo push #{repo} #{podspec_path}"
+  # end
 end
 
 # @return [Pod::Version] The version as reported by the Podspec.

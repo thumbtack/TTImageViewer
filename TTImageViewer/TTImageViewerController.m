@@ -15,7 +15,7 @@
 
 #import "TTImageViewerController.h"
 
-static const CGFloat __overlayAlpha = 0.6f;						// opacity of the black overlay displayed below the focused image
+static const CGFloat __overlayAlpha = 0.8f;						// opacity of the black overlay displayed below the focused image
 static const CGFloat __animationDuration = 0.18f;				// the base duration for present/dismiss animations (except physics-related ones)
 static const CGFloat __maximumDismissDelay = 0.5f;				// maximum time of delay (in seconds) between when image view is push out and dismissal animations begin
 static const CGFloat __resistance = 0.0f;						// linear resistance applied to the image’s dynamic item behavior
@@ -51,7 +51,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *backgroundView;
 @property (nonatomic, strong) UIDynamicAnimator *animator;
-@property (nonatomic, strong) UISnapBehavior *snapBehavior;
 @property (nonatomic, strong) UIPushBehavior *pushBehavior;
 @property (nonatomic, strong) UIAttachmentBehavior *panAttachmentBehavior;
 @property (nonatomic, strong) UIDynamicItemBehavior *itemBehavior;
@@ -60,7 +59,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 @property (nonatomic, strong) UIPanGestureRecognizer *panRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTapRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
-@property (nonatomic, strong) UITapGestureRecognizer *photoTapRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *photoLongPressRecognizer;
 
 @property (nonatomic, strong) UIView *blurredSnapshotView;
@@ -148,41 +146,25 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	[self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
 	[self.view addGestureRecognizer:self.tapRecognizer];
 
-	// only add pan gesture and physics stuff if we can (e.g., iOS 7+)
-	if (NSClassFromString(@"UIDynamicAnimator")) {
-		// pan gesture to handle the physics
-		self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-		self.panRecognizer.delegate = self;
-		[self.imageView addGestureRecognizer:self.panRecognizer];
+    // pan gesture to handle the physics
+    self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    self.panRecognizer.delegate = self;
+    [self.imageView addGestureRecognizer:self.panRecognizer];
 
-		/* UIDynamics stuff */
-		self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
-		self.animator.delegate = self;
+    /* UIDynamics stuff */
+    self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
+    self.animator.delegate = self;
 
-		// snap behavior to keep image view in the center as needed
-		self.snapBehavior = [[UISnapBehavior alloc] initWithItem:self.imageView snapToPoint:self.view.center];
-		self.snapBehavior.damping = 1.0f;
+    self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[self.imageView] mode:UIPushBehaviorModeInstantaneous];
+    self.pushBehavior.angle = 0.0f;
+    self.pushBehavior.magnitude = 0.0f;
 
-		self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[self.imageView] mode:UIPushBehaviorModeInstantaneous];
-		self.pushBehavior.angle = 0.0f;
-		self.pushBehavior.magnitude = 0.0f;
-
-		self.itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.imageView]];
-		self.itemBehavior.elasticity = 0.0f;
-		self.itemBehavior.friction = 0.2f;
-		self.itemBehavior.allowsRotation = YES;
-		self.itemBehavior.density = __density;
-		self.itemBehavior.resistance = __resistance;
-	}
-	else {
-		// add tap gesture to image to also dismiss since we don't have UIDynamics to flick out of view
-		self.photoTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissFromTap:)];
-		self.photoTapRecognizer.delegate = self;
-		self.photoTapRecognizer.numberOfTapsRequired = 1;
-		self.photoTapRecognizer.numberOfTouchesRequired = 1;
-		[self.photoTapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
-		[self.imageView addGestureRecognizer:self.photoTapRecognizer];
-	}
+    self.itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.imageView]];
+    self.itemBehavior.elasticity = 0.0f;
+    self.itemBehavior.friction = 0.2f;
+    self.itemBehavior.allowsRotation = YES;
+    self.itemBehavior.density = __density;
+    self.itemBehavior.resistance = __resistance;
 }
 
 #pragma mark - Presenting and Dismissing
@@ -294,7 +276,20 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 }
 
 - (void)dismissAfterPush {
+//    [self.animator removeBehavior:self.pushBehavior];
+//    [self.animator removeBehavior:self.itemBehavior];
+//
+//    CGRect frame = _originalFrame;
+//    NSLog(@"x: %f, y: %f, h: %f, w: %f", self.imageView.superview.frame.size.width, frame.origin.y, frame.size.width, frame.size.height);
+//    self.imageView.frame = CGRectMake(self.imageView.superview.frame.size.width, frame.origin.y, frame.size.width, frame.size.height);
+//    self.imageView.transform = CGAffineTransformIdentity;
+//
+//    [self returnToCenter];
+
+
 	[self hideSnapshotView];
+
+
 	[UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		self.backgroundView.alpha = 0.0f;
 	} completion:^(BOOL finished) {
@@ -445,7 +440,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	if (self.animator) {
 		[self.animator removeAllBehaviors];
 	}
-	[UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+	[UIView animateWithDuration:0.25 delay:0 options:0 animations:^{
 		self.imageView.transform = CGAffineTransformIdentity;
 		self.imageView.frame = _originalFrame;
 	} completion:nil];
@@ -502,12 +497,10 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	CGPoint boxLocation = [gestureRecognizer locationInView:self.imageView];
 
 	if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-		[self.animator removeBehavior:self.snapBehavior];
 		[self.animator removeBehavior:self.pushBehavior];
 
 		UIOffset centerOffset = UIOffsetMake(boxLocation.x - CGRectGetMidX(self.imageView.bounds), boxLocation.y - CGRectGetMidY(self.imageView.bounds));
 		self.panAttachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:self.imageView offsetFromCenter:centerOffset attachedToAnchor:location];
-		//self.panAttachmentBehavior.frequency = 0.0f;
 		[self.animator addBehavior:self.panAttachmentBehavior];
 		[self.animator addBehavior:self.itemBehavior];
 		[self scaleImageForDynamics];

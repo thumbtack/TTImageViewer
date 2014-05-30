@@ -49,6 +49,7 @@
 @property (nonatomic, weak) id<TTImageViewerControllerDelegate> delegate;
 
 - (void)showImages:(NSArray *)images withInitialImage:(UIImage *)initialImage fromView:(UIView *)fromView;
+- (void)showImage:(UIImage *)image fromView:(UIView *)fromView;
 - (void)showImage:(UIImage *)image fromRect:(CGRect)fromRect;
 
 @end

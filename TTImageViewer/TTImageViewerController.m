@@ -15,7 +15,7 @@
 
 #import "TTImageViewerController.h"
 
-static const CGFloat __minDirection = 80.0f;
+static const CGFloat __minDirection = 100.0f;
 static const CGFloat __overlayAlpha = 0.8f;						// opacity of the black overlay displayed below the focused image
 static const CGFloat __animationDuration = 0.18f;				// the base duration for present/dismiss animations (except physics-related ones)
 static const CGFloat __maximumDismissDelay = 0.5f;				// maximum time of delay (in seconds) between when image view is push out and dismissal animations begin
@@ -65,6 +65,8 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 @property (nonatomic, strong) UIView *blurredSnapshotView;
 @property (nonatomic, strong) UIView *snapshotView;
 
+@property (nonatomic, strong) NSArray *images;
+
 @end
 
 @implementation TTImageViewerController {
@@ -81,6 +83,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 - (id)init {
 	self = [super init];
 	if (self) {
+        _images = @[];
 		_hasLaidOut = NO;
 		_unhideStatusBarOnDismiss = YES;
 
@@ -170,8 +173,9 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 #pragma mark - Presenting and Dismissing
 
-- (void)showImages:(NSArray *)images withInitialImage:(UIImage *)image fromView:(UIView *)fromView {
-	[self showImage:image fromView:fromView];
+- (void)showImages:(NSArray *)images withInitialImage:(UIImage *)initialImage fromView:(UIView *)fromView {
+    self.images = images;
+	[self showImage:initialImage fromView:fromView];
 }
 
 - (void)showImage:(UIImage *)image fromView:(UIView *)fromView {
@@ -188,7 +192,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	// since UIWindow always use portrait orientation in convertRect:inView:, we need to convert the source view's frame to
 	// this controller's view based on the current interface orientation
 	self.fromRect = [self convertRect:fromRect forOrientation:_currentOrientation];
-	NSLog(@"fromRect=%@", NSStringFromCGRect(self.fromRect));
+	//NSLog(@"fromRect=%@", NSStringFromCGRect(self.fromRect));
 
 	self.imageView.transform = CGAffineTransformIdentity;
 	self.imageView.image = image;
@@ -276,28 +280,38 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	}];
 }
 
-- (void)dismissAfterPush {
-//    [self.animator removeBehavior:self.pushBehavior];
-//    [self.animator removeBehavior:self.itemBehavior];
-//
-//    CGRect frame = _originalFrame;
-//    NSLog(@"x: %f, y: %f, h: %f, w: %f", self.imageView.superview.frame.size.width, frame.origin.y, frame.size.width, frame.size.height);
-//    self.imageView.frame = CGRectMake(self.imageView.superview.frame.size.width, frame.origin.y, frame.size.width, frame.size.height);
-//    self.imageView.transform = CGAffineTransformIdentity;
-//
-//    [self returnToCenter];
+- (void)setImages:(NSArray *)images {
+    _images = images;
+}
 
-    NSString *direction = self.imageView.frame.origin.x < 0 ? @"left" : @"right";
-    NSLog(@"%@", direction);
+- (void)nextOrDismiss {
+    [self.animator removeBehavior:self.pushBehavior];
+    [self.animator removeBehavior:self.itemBehavior];
 
-	[self hideSnapshotView];
+    BOOL left = self.imageView.frame.origin.x < 0 ? YES : NO;
 
+    NSInteger idx = [self.images indexOfObject:self.imageView.image];
+    left ? idx++ : idx--;
 
-	[UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-		self.backgroundView.alpha = 0.0f;
-	} completion:^(BOOL finished) {
-		[self cleanup];
-	}];
+    if (idx >= 0 && idx < [self.images count]) {
+        self.imageView.image = self.images[idx];
+
+        CGRect frame = _originalFrame;
+        CGFloat x = left ? self.imageView.superview.frame.size.width : -frame.size.width;
+        //NSLog(@"x: %f, y: %f, h: %f, w: %f", x, frame.origin.y, frame.size.width, frame.size.height);
+        self.imageView.frame = CGRectMake(x, frame.origin.y, frame.size.width, frame.size.height);
+        self.imageView.transform = CGAffineTransformIdentity;
+
+        [self returnToCenter];
+    } else {
+        [self hideSnapshotView];
+
+        [UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            self.backgroundView.alpha = 0.0f;
+        } completion:^(BOOL finished) {
+            [self cleanup];
+        }];
+    }
 }
 
 - (void)dismissToTargetView {
@@ -517,7 +531,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		// need to scale velocity values to tame down physics on the iPad
 		CGFloat deviceVelocityScale = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 0.2f : 1.0f;
 		CGFloat deviceAngularScale = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 0.7f : 1.0f;
-		// factor to increase delay before `dismissAfterPush` is called on iPad to account for more area to cover to disappear
+		// factor to increase delay before `nextOrDismiss` is called on iPad to account for more area to cover to disappear
 		CGFloat deviceDismissDelay = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 1.8f : 1.0f;
 		CGPoint velocity = [gestureRecognizer velocityInView:self.view];
 		CGFloat velocityAdjust = 10.0f * deviceVelocityScale;
@@ -561,10 +575,12 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 			self.pushBehavior.pushDirection = CGVectorMake((velocity.x / velocityAdjust) * __velocityFactor, (velocity.y / velocityAdjust) * __velocityFactor);
 			self.pushBehavior.active = YES;
 
+            //NSLog(@"direction x: %f, y %f", self.pushBehavior.pushDirection.dx, self.pushBehavior.pushDirection.dy);
+
             if (fabs(self.pushBehavior.pushDirection.dx) > __minDirection) {
                 // delay for dismissing is based on push velocity also
                 CGFloat delay = __maximumDismissDelay - (pushVelocity / 10000.0f);
-                [self performSelector:@selector(dismissAfterPush) withObject:nil afterDelay:(delay * deviceDismissDelay) * __velocityFactor];
+                [self performSelector:@selector(nextOrDismiss) withObject:nil afterDelay:(delay * deviceDismissDelay) * __velocityFactor];
             } else {
                 [self returnToCenter];
             }

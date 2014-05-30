@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 	s.platform			= :ios, '7.0'
 	s.license			= { :type => 'MIT', :file => 'LICENSE' }
 	s.requires_arc		= true
-	s.source_files		= 'TTImageViewerController.{h,m}'
+	s.source_files		= 'TTImageViewer/TTImageViewerController.{h,m}'
 	s.frameworks		= 'UIKit', 'Foundation', 'CoreGraphics', 'QuartzCore', 'AssetsLibrary'
 	s.ios.deployment_target = '7.0'
 end

@@ -10,8 +10,8 @@
 #import "TTImageViewerController.h"
 
 @interface TTDemoViewController ()
-@property (nonatomic, strong) UIButton *button;
 @property (nonatomic, strong) TTImageViewerController *viewer;
+@property (nonatomic, strong) NSMutableArray *images;
 
 @end
 
@@ -21,30 +21,42 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor lightGrayColor];
 
-    self.button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.button setTitle:@"Open Viewer" forState:UIControlStateNormal];
-    [self.button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.button setBackgroundColor:[UIColor blackColor]];
-    self.button.layer.cornerRadius = 10.f;
-    self.button.translatesAutoresizingMaskIntoConstraints = NO;
-    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+    UIImage *image;
+    UIImageView *imageView;
+    NSInteger i = 0;
+    NSInteger initialOffset = 20;
 
-    [self.button addTarget:self action:@selector(openViewer:) forControlEvents:UIControlEventTouchUpInside];
+    for (image in [self images]) {
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, initialOffset + (i * 130), 120, 120)];
+        imageView.image = image;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.userInteractionEnabled = YES;
 
-    [self.view addSubview:self.button];
-}
+        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openViewer:)];
+        [imageView addGestureRecognizer:gesture];
 
-- (void)updateViewConstraints {
-    NSDictionary *views = @{@"button" : self.button};
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[button(==60)]|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button(==200)]|" options:0 metrics:nil views:views]];
-
-    [super updateViewConstraints];
+        [self.view addSubview:imageView];
+        i++;
+    }
 }
 
 - (void)openViewer:(id)sender {
+    UITapGestureRecognizer *gesture = sender;
+    UIImageView *imageView = (UIImageView *)gesture.view;
+
     self.viewer = [[TTImageViewerController alloc] init];
-    [self.viewer showImages:@[[UIImage imageNamed:@"img1"]] withInitialImage:[UIImage imageNamed:@"img1"] fromView:self.button];
+    [self.viewer showImages:[self images] withInitialImage:imageView.image fromView:imageView];
+}
+
+- (NSArray *)images {
+    if (_images) return _images;
+    _images = [[NSMutableArray alloc] init];
+
+    for (NSString *name in @[@"img1", @"img2", @"img3", @"img4"]) {
+        [_images addObject:[UIImage imageNamed:name]];
+    }
+
+    return _images;
 }
 
 @end

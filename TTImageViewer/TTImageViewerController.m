@@ -15,6 +15,7 @@
 
 #import "TTImageViewerController.h"
 
+static const CGFloat __minDirection = 80.0f;
 static const CGFloat __overlayAlpha = 0.8f;						// opacity of the black overlay displayed below the focused image
 static const CGFloat __animationDuration = 0.18f;				// the base duration for present/dismiss animations (except physics-related ones)
 static const CGFloat __maximumDismissDelay = 0.5f;				// maximum time of delay (in seconds) between when image view is push out and dismissal animations begin
@@ -286,6 +287,8 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 //
 //    [self returnToCenter];
 
+    NSString *direction = self.imageView.frame.origin.x < 0 ? @"left" : @"right";
+    NSLog(@"%@", direction);
 
 	[self hideSnapshotView];
 
@@ -558,9 +561,13 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 			self.pushBehavior.pushDirection = CGVectorMake((velocity.x / velocityAdjust) * __velocityFactor, (velocity.y / velocityAdjust) * __velocityFactor);
 			self.pushBehavior.active = YES;
 
-			// delay for dismissing is based on push velocity also
-			CGFloat delay = __maximumDismissDelay - (pushVelocity / 10000.0f);
-			[self performSelector:@selector(dismissAfterPush) withObject:nil afterDelay:(delay * deviceDismissDelay) * __velocityFactor];
+            if (fabs(self.pushBehavior.pushDirection.dx) > __minDirection) {
+                // delay for dismissing is based on push velocity also
+                CGFloat delay = __maximumDismissDelay - (pushVelocity / 10000.0f);
+                [self performSelector:@selector(dismissAfterPush) withObject:nil afterDelay:(delay * deviceDismissDelay) * __velocityFactor];
+            } else {
+                [self returnToCenter];
+            }
 		}
 		else {
 			[self returnToCenter];

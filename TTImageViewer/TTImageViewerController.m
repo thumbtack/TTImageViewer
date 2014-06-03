@@ -64,6 +64,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 @property (nonatomic, strong) UIImageView *currentImageView;
 @property (nonatomic, assign) NSUInteger numberOfImages;
 @property (nonatomic, strong) NSMutableDictionary *scaledImageViewFrames;
+@property (nonatomic, strong) NSMutableDictionary *imageViewScales;
 
 @end
 
@@ -155,6 +156,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     self.pageControl.currentPage = index;
     self.imageViews = [[NSMutableDictionary alloc] init];
     self.scaledImageViewFrames = [[NSMutableDictionary alloc] init];
+    self.imageViewScales = [[NSMutableDictionary alloc] init];
 	_currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
 
 	// create snapshot of background if parallax is enabled
@@ -211,9 +213,15 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 }
 
 - (CGFloat)scaleForImageView:(UIImageView *)imageView {
-	CGFloat scaleWidth = CGRectGetWidth(self.scrollView.frame) / CGRectGetWidth(imageView.frame);
-	CGFloat scaleHeight = CGRectGetHeight(self.scrollView.frame) / CGRectGetHeight(imageView.frame);
-	return MIN(scaleWidth, scaleHeight);
+    NSString *key = [NSString stringWithFormat:@"%p", imageView];
+
+    if (!self.imageViewScales[key]) {
+        CGFloat scaleWidth = CGRectGetWidth(self.scrollView.frame) / CGRectGetWidth(imageView.frame);
+        CGFloat scaleHeight = CGRectGetHeight(self.scrollView.frame) / CGRectGetHeight(imageView.frame);
+        self.imageViewScales[key] = @(MIN(scaleWidth, scaleHeight));
+    }
+    
+    return [self.imageViewScales[key] floatValue];
 }
 
 - (CGRect)scaledFrameForImageView:(UIImageView *)imageView {
@@ -243,13 +251,13 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
         [self.currentImageView removeGestureRecognizer:self.panRecognizer];
     }
 
-    [self.scrollView addSubview:imageView];
+    self.currentImageView = imageView;
     [self prepareScrollViewForImageView:imageView];
+    [self.scrollView addSubview:imageView];
     [self.pushBehavior addItem:imageView];
     [self.itemBehavior addItem:imageView];
     [imageView addGestureRecognizer:self.doubleTapRecognizer];
     [imageView addGestureRecognizer:self.panRecognizer];
-    self.currentImageView = imageView;
 }
 
 - (void)prepareScrollViewForImageView:(UIImageView *)imageView {
@@ -342,10 +350,10 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 - (void)dismissToTargetView {
 	[self hideSnapshotView];
     self.pageControl.hidden = YES;
-
+    self.currentImageView.hidden = YES;
+    
     [UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.backgroundView.alpha = 0.0f;
-        self.currentImageView.alpha = 0.f;
     } completion:^(BOOL finished) {
         [self cleanup];
     }];

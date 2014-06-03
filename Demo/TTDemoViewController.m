@@ -67,9 +67,11 @@
     return 4;
 }
 
-- (void)imageViewer:(TTImageViewerController *)imageViewer prepareImageView:(UIImageView *)imageView atIndex:(NSUInteger)index {
+- (UIImageView *)imageViewer:(TTImageViewerController *)imageViewer imageViewForImageAtIndex:(NSUInteger)index {
+    UIImageView *imageView = [[UIImageView alloc] init];
     imageView.image = [self images][index];
     imageView.frame = CGRectMake(0, 0, imageView.image.size.width, imageView.image.size.height);
+    return imageView;
 }
 
 @end

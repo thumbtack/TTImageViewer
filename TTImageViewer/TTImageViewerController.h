@@ -16,7 +16,7 @@
 @protocol TTImageViewerControllerDelegate <NSObject>
 
 - (NSUInteger)numberOfImagesInImageViewer:(TTImageViewerController *)imageViewer;
-- (void)imageViewer:(TTImageViewerController *)imageViewer prepareImageView:(UIImageView *)imageView atIndex:(NSUInteger)index;
+- (UIImageView *)imageViewer:(TTImageViewerController *)imageViewer imageViewForImageAtIndex:(NSUInteger)index;
 @end
 
 @interface TTImageViewerController : UIViewController <UIDynamicAnimatorDelegate, UIGestureRecognizerDelegate>

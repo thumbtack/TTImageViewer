@@ -290,10 +290,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 }
 
 - (UIImageView *)buildImageViewAtIndex:(NSUInteger)index {
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-
-    imageView.tag = index;
-    imageView = [[UIImageView alloc] init];
+    UIImageView *imageView = [self.delegate imageViewer:self imageViewForImageAtIndex:index];
 	imageView.contentMode = UIViewContentModeScaleAspectFit;
 	imageView.alpha = 0.0f;
 	imageView.userInteractionEnabled = YES;
@@ -314,8 +311,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     self.itemBehavior.allowsRotation = YES;
     self.itemBehavior.density = __density;
     self.itemBehavior.resistance = __resistance;
-
-    [self.delegate imageViewer:self prepareImageView:imageView atIndex:index];
 
     return imageView;
 }

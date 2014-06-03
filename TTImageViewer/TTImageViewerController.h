@@ -14,22 +14,9 @@
 @class TTImageViewerController;
 
 @protocol TTImageViewerControllerDelegate <NSObject>
-@optional
 
-/**
- *  Tells the delegate that the controller's view is visisble. This is called after all presentation animations have completed.
- *
- *  @param mediaFocusViewController The instance that triggered the event.
- */
-- (void)mediaFocusViewControllerDidAppear:(TTImageViewerController *)mediaFocusViewController;
-
-/**
- *  Tells the delegate that the controller's view has been removed and is no longer visible. This is called after all dismissal animations have completed.
- *
- *  @param mediaFocusViewController The instance the triggered the event.
- */
-- (void)mediaFocusViewControllerDidDisappear:(TTImageViewerController *)mediaFocusViewController;
-
+- (NSUInteger)numberOfImagesInImageViewer:(TTImageViewerController *)imageViewer;
+- (void)imageViewer:(TTImageViewerController *)imageViewer prepareImageView:(UIImageView *)imageView atIndex:(NSUInteger)index;
 @end
 
 @interface TTImageViewerController : UIViewController <UIDynamicAnimatorDelegate, UIGestureRecognizerDelegate>
@@ -48,9 +35,12 @@
 
 @property (nonatomic, weak) id<TTImageViewerControllerDelegate> delegate;
 
-- (void)showImages:(NSArray *)images withInitialImage:(UIImage *)initialImage fromView:(UIView *)fromView;
-- (void)showImage:(UIImage *)image fromView:(UIView *)fromView;
-- (void)showImage:(UIImage *)image fromRect:(CGRect)fromRect;
+//- (void)showFromView:(UIView *)fromView;
+- (void)showFromView:(UIView *)fromView withInitialIndex:(NSUInteger)index;
+
+//- (void)showImages:(NSArray *)images withInitialImage:(UIImage *)initialImage fromView:(UIView *)fromView;
+//- (void)showImage:(UIImage *)image fromView:(UIView *)fromView;
+//- (void)showImage:(UIImage *)image fromRect:(CGRect)fromRect;
 
 @end
 

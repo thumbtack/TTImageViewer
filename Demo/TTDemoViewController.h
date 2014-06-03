@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTImageViewerController.h"
 
-@interface TTDemoViewController : UIViewController
+@interface TTDemoViewController : UIViewController <TTImageViewerControllerDelegate>
 
 @end

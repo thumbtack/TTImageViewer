@@ -45,18 +45,31 @@
     UIImageView *imageView = (UIImageView *)gesture.view;
 
     self.viewer = [[TTImageViewerController alloc] init];
-    [self.viewer showImages:[self images] withInitialImage:imageView.image fromView:imageView];
+    self.viewer.delegate = self;
+    [self.viewer showFromView:imageView withInitialIndex:0];
 }
 
 - (NSArray *)images {
     if (_images) return _images;
     _images = [[NSMutableArray alloc] init];
 
-    for (NSString *name in @[@"img1", @"img2", @"img3", @"img4"]) {
+    for (NSString *name in @[@"tesla", @"img2", @"img3", @"img4"]) {
         [_images addObject:[UIImage imageNamed:name]];
     }
 
     return _images;
+}
+
+
+#pragma mark - TTImageViewerControllerDelegate
+
+- (NSUInteger)numberOfImagesInImageViewer:(TTImageViewerController *)imageViewer {
+    return 4;
+}
+
+- (void)imageViewer:(TTImageViewerController *)imageViewer prepareImageView:(UIImageView *)imageView atIndex:(NSUInteger)index {
+    imageView.image = [self images][index];
+    imageView.frame = CGRectMake(0, 0, imageView.image.size.width, imageView.image.size.height);
 }
 
 @end

@@ -44,10 +44,10 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 @interface TTImageViewerController () <UIScrollViewDelegate>
 
-@property (nonatomic, strong) UIView *fromView;
-@property (nonatomic, assign) CGRect fromRect;
+//@property (nonatomic, strong) UIView *fromView;
+//@property (nonatomic, assign) CGRect fromRect;
 
-@property (nonatomic, strong) UIImageView *imageView;
+//@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *backgroundView;
@@ -59,19 +59,20 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 @property (nonatomic, readonly) UIWindow *keyWindow;
 @property (nonatomic, strong) UIPanGestureRecognizer *panRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTapRecognizer;
-@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *photoLongPressRecognizer;
 
 @property (nonatomic, strong) UIView *blurredSnapshotView;
 @property (nonatomic, strong) UIView *snapshotView;
 
-@property (nonatomic, strong) NSArray *images;
+@property (nonatomic, strong) NSMutableDictionary *imageViews;
 @property (nonatomic, strong) UIPageControl *pageControl;
+@property (nonatomic, strong) UIImageView *currentImageView;
+@property (nonatomic, assign) NSUInteger numberOfImages;
+@property (nonatomic, strong) NSMutableDictionary *scaledImageViewFrames;
 
 @end
 
 @implementation TTImageViewerController {
-	CGRect _originalFrame;
 	CGFloat _minScale;
 	CGFloat _maxScale;
 	CGFloat _lastPinchScale;
@@ -84,7 +85,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 - (id)init {
 	self = [super init];
 	if (self) {
-        _images = @[];
 		_hasLaidOut = NO;
 		_unhideStatusBarOnDismiss = YES;
 
@@ -124,17 +124,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 	[self.scrollView addSubview:self.containerView];
 
-	self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50.0, 50.0)];
-	self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-	self.imageView.alpha = 0.0f;
-	self.imageView.userInteractionEnabled = YES;
-	// Enable edge antialiasing on 7.0 or later.
-	// This symbol appears pre-7.0 but is not considered public API until 7.0
-	if (([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending)) {
-		self.imageView.layer.allowsEdgeAntialiasing = YES;
-	}
-	[self.containerView addSubview:self.imageView];
-
     CGFloat pageControlHeight = 20.f;
     CGFloat pageControlBottomMargin = 5.f;
     CGFloat y = self.keyWindow.frame.size.height - pageControlHeight - pageControlBottomMargin;
@@ -143,72 +132,39 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
     [self.view addSubview:self.pageControl];
 
+    // pan gesture to handle the physics
+    self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    self.panRecognizer.delegate = self;
+
 	/* setup gesture recognizers */
 	// double tap gesture to return scaled image back to center for easier dismissal
 	self.doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTapGesture:)];
 	self.doubleTapRecognizer.delegate = self;
 	self.doubleTapRecognizer.numberOfTapsRequired = 2;
 	self.doubleTapRecognizer.numberOfTouchesRequired = 1;
-	[self.imageView addGestureRecognizer:self.doubleTapRecognizer];
 
 	// tap recognizer on area outside image view for dismissing
-	self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissFromTap:)];
-	self.tapRecognizer.delegate = self;
-	self.tapRecognizer.numberOfTapsRequired = 1;
-	self.tapRecognizer.numberOfTouchesRequired = 1;
-	[self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
-	[self.view addGestureRecognizer:self.tapRecognizer];
-
-    // pan gesture to handle the physics
-    self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-    self.panRecognizer.delegate = self;
-    [self.imageView addGestureRecognizer:self.panRecognizer];
+	UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissFromTap:)];
+	tapRecognizer.delegate = self;
+	tapRecognizer.numberOfTapsRequired = 1;
+	tapRecognizer.numberOfTouchesRequired = 1;
+	[tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
+	[self.view addGestureRecognizer:tapRecognizer];
 
     /* UIDynamics stuff */
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
     self.animator.delegate = self;
-
-    self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[self.imageView] mode:UIPushBehaviorModeInstantaneous];
-    self.pushBehavior.angle = 0.0f;
-    self.pushBehavior.magnitude = 0.0f;
-
-    self.itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.imageView]];
-    self.itemBehavior.elasticity = 0.0f;
-    self.itemBehavior.friction = 0.2f;
-    self.itemBehavior.allowsRotation = YES;
-    self.itemBehavior.density = __density;
-    self.itemBehavior.resistance = __resistance;
 }
 
-#pragma mark - Presenting and Dismissing
-
-- (void)showImages:(NSArray *)images withInitialImage:(UIImage *)initialImage fromView:(UIView *)fromView {
+- (void)showFromView:(UIView *)fromView withInitialIndex:(NSUInteger)index {
 	[self view]; // make sure view has loaded first
-    self.images = images;
-    self.pageControl.numberOfPages = [self.images count];
-    self.pageControl.currentPage = [self.images indexOfObject:initialImage];
-	[self showImage:initialImage fromView:fromView];
-}
 
-- (void)showImage:(UIImage *)image fromView:(UIView *)fromView {
-	self.fromView = fromView;
-	CGRect fromRect = [fromView.superview convertRect:fromView.frame toView:nil];
-
-	[self showImage:image fromRect:fromRect];
-}
-
-- (void)showImage:(UIImage *)image fromRect:(CGRect)fromRect {
-	[self view]; // make sure view has loaded first
+    self.numberOfImages = [self.delegate numberOfImagesInImageViewer:self];
+    self.pageControl.numberOfPages = self.numberOfImages;
+    self.pageControl.currentPage = index;
+    self.imageViews = [[NSMutableDictionary alloc] init];
+    self.scaledImageViewFrames = [[NSMutableDictionary alloc] init];
 	_currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
-
-	// since UIWindow always use portrait orientation in convertRect:inView:, we need to convert the source view's frame to
-	// this controller's view based on the current interface orientation
-	self.fromRect = [self convertRect:fromRect forOrientation:_currentOrientation];
-	//NSLog(@"fromRect=%@", NSStringFromCGRect(self.fromRect));
-
-	self.imageView.transform = CGAffineTransformIdentity;
-	self.imageView.image = image;
-	self.imageView.alpha = 0.2;
 
 	// create snapshot of background if parallax is enabled
 	if (self.parallaxEnabled || self.shouldBlurBackground) {
@@ -224,37 +180,12 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		}
 	}
 
-	// update scrollView.contentSize to the size of the image
-	self.scrollView.contentSize = image.size;
-	CGFloat scaleWidth = CGRectGetWidth(self.scrollView.frame) / self.scrollView.contentSize.width;
-	CGFloat scaleHeight = CGRectGetHeight(self.scrollView.frame) / self.scrollView.contentSize.height;
-	CGFloat scale = MIN(scaleWidth, scaleHeight);
+    UIImageView *imageView = [self imageViewAtIndex:index];
+    [self prepareImageViewForAppearance:imageView];
+    CGRect scaledFrame = [self scaledFrameForImageView:imageView];
+    imageView.frame = fromView.frame;
 
-	// image view's destination frame is the size of the image capped to the width/height of the target view
-	CGPoint midpoint = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
-	CGSize scaledImageSize = CGSizeMake(image.size.width * scale, image.size.height * scale);
-	CGRect targetRect = CGRectMake(midpoint.x - scaledImageSize.width / 2.0, midpoint.y - scaledImageSize.height / 2.0, scaledImageSize.width, scaledImageSize.height);
-
-	// set initial frame of image view to match that of the presenting image
-	self.imageView.frame = self.fromRect;
-	_originalFrame = targetRect;
-
-	// rotate imageView based on current device orientation
-	[self reposition];
-
-	if (scale < 1.0f) {
-		self.scrollView.minimumZoomScale = 1.0f;
-		self.scrollView.maximumZoomScale = 1.0f / scale;
-	}
-	else {
-		self.scrollView.minimumZoomScale = 1.0f / scale;
-		self.scrollView.maximumZoomScale = 1.0f;
-	}
-
-	_minScale = self.scrollView.minimumZoomScale;
-	_maxScale = self.scrollView.maximumZoomScale;
-	_lastPinchScale = 1.0f;
-	_hasLaidOut = YES;
+    _hasLaidOut = YES;
 
 	// register for device orientation changes
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -275,8 +206,8 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	[UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		self.backgroundView.alpha = 1.0f;
         self.pageControl.alpha = 1.0f;
-		self.imageView.alpha = 1.0f;
-		self.imageView.frame = targetRect;
+		imageView.alpha = 1.0f;
+		imageView.frame = scaledFrame;
 
 		if (self.snapshotView) {
 			self.blurredSnapshotView.alpha = 1.0f;
@@ -285,60 +216,161 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 				self.snapshotView.transform = CGAffineTransformScale(CGAffineTransformIdentity, __backgroundScale, __backgroundScale);
 			}
 		}
-
-	} completion:^(BOOL finished) {
-		if ([self.delegate respondsToSelector:@selector(mediaFocusViewControllerDidAppear:)]) {
-			[self.delegate mediaFocusViewControllerDidAppear:self];
-		}
-	}];
+	} completion:nil];
 }
 
-- (void)setImages:(NSArray *)images {
-    _images = images;
+- (CGFloat)scaleForImageView:(UIImageView *)imageView {
+	CGFloat scaleWidth = CGRectGetWidth(self.scrollView.frame) / CGRectGetWidth(imageView.frame);
+	CGFloat scaleHeight = CGRectGetHeight(self.scrollView.frame) / CGRectGetHeight(imageView.frame);
+	return MIN(scaleWidth, scaleHeight);
 }
 
-- (void)nextOrDismiss {
+- (CGRect)scaledFrameForImageView:(UIImageView *)imageView {
+    CGRect scaledFrame;
+    NSString *key = [NSString stringWithFormat:@"%p", imageView];
+
+    if (!self.scaledImageViewFrames[key]) {
+        CGFloat scale = [self scaleForImageView:imageView];
+
+        // image view's destination frame is the size of the image capped to the width/height of the target view
+        CGPoint midpoint = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        CGSize scaledImageSize = CGSizeMake(CGRectGetWidth(imageView.frame) * scale, CGRectGetHeight(imageView.frame) * scale);
+        scaledFrame = CGRectMake(midpoint.x - scaledImageSize.width / 2.0, midpoint.y - scaledImageSize.height / 2.0, scaledImageSize.width, scaledImageSize.height);
+
+        self.scaledImageViewFrames[key] = [NSValue valueWithCGRect:scaledFrame];
+    }
+
+    return [self.scaledImageViewFrames[key] CGRectValue];
+}
+
+- (void)prepareImageViewForAppearance:(UIImageView *)imageView {
+    if (self.currentImageView) {
+        [self.currentImageView removeFromSuperview];
+        [self.pushBehavior removeItem:self.currentImageView];
+        [self.itemBehavior removeItem:self.currentImageView];
+        [self.currentImageView removeGestureRecognizer:self.doubleTapRecognizer];
+        [self.currentImageView removeGestureRecognizer:self.panRecognizer];
+    }
+
+    [self.containerView addSubview:imageView];
+    [self prepareScrollViewForImageView:imageView];
+    [self.pushBehavior addItem:imageView];
+    [self.itemBehavior addItem:imageView];
+    [imageView addGestureRecognizer:self.doubleTapRecognizer];
+    [imageView addGestureRecognizer:self.panRecognizer];
+    self.currentImageView = imageView;
+}
+
+- (void)prepareScrollViewForImageView:(UIImageView *)imageView {
+    self.scrollView.zoomScale = 1.0f;
+	self.scrollView.contentSize = imageView.frame.size;
+	CGFloat scale = [self scaleForImageView:imageView];
+
+	// rotate imageView based on current device orientation
+	[self reposition];
+
+	if (scale < 1.0f) {
+		self.scrollView.minimumZoomScale = 1.0f;
+		self.scrollView.maximumZoomScale = 1.0f / scale;
+	}
+	else {
+		self.scrollView.minimumZoomScale = 1.0f / scale;
+		self.scrollView.maximumZoomScale = 1.0f;
+	}
+
+	_minScale = self.scrollView.minimumZoomScale;
+	_maxScale = self.scrollView.maximumZoomScale;
+	_lastPinchScale = 1.0f;
+}
+
+//- (void)showImageAtIndex:(NSUInteger)index fromView:(UIView *)fromView {
+//
+//    self.currentImageView = imageView;
+//
+//	// since UIWindow always use portrait orientation in convertRect:inView:, we need to convert the source view's frame to
+//	// this controller's view based on the current interface orientation
+////	CGRect fromRect = [self convertRect:fromView.frame forOrientation:_currentOrientation];
+//	//NSLog(@"fromRect=%@", NSStringFromCGRect(self.fromRect));
+//
+//
+//
+//}
+
+- (UIImageView *)imageViewAtIndex:(NSUInteger)index {
+    if (!self.imageViews[@(index)]) {
+        self.imageViews[@(index)] = [self buildImageViewAtIndex:index];
+    }
+    return self.imageViews[@(index)];
+}
+
+- (UIImageView *)buildImageViewAtIndex:(NSUInteger)index {
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+
+    imageView.tag = index;
+    imageView = [[UIImageView alloc] init];
+	imageView.contentMode = UIViewContentModeScaleAspectFit;
+	imageView.alpha = 0.0f;
+	imageView.userInteractionEnabled = YES;
+
+	// Enable edge antialiasing on 7.0 or later.
+	// This symbol appears pre-7.0 but is not considered public API until 7.0
+	if (([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending)) {
+		imageView.layer.allowsEdgeAntialiasing = YES;
+	}
+
+    self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[] mode:UIPushBehaviorModeInstantaneous];
+    self.pushBehavior.angle = 0.0f;
+    self.pushBehavior.magnitude = 0.0f;
+
+    self.itemBehavior = [[UIDynamicItemBehavior alloc] init];
+    self.itemBehavior.elasticity = 0.0f;
+    self.itemBehavior.friction = 0.2f;
+    self.itemBehavior.allowsRotation = YES;
+    self.itemBehavior.density = __density;
+    self.itemBehavior.resistance = __resistance;
+
+    [self.delegate imageViewer:self prepareImageView:imageView atIndex:index];
+
+    return imageView;
+}
+
+- (void)nextOrDismissImageView:(UIImageView *)imageView {
     [self.animator removeBehavior:self.pushBehavior];
     [self.animator removeBehavior:self.itemBehavior];
 
-    BOOL left = self.imageView.frame.origin.x < 0 ? YES : NO;
+    BOOL left = imageView.frame.origin.x < 0 ? YES : NO;
+    NSArray *keys = [self.imageViews allKeysForObject:imageView];
+    NSInteger index = [(NSNumber *)keys[0] integerValue];
+    left ? index++ : index--;
 
-    NSInteger idx = [self.images indexOfObject:self.imageView.image];
-    left ? idx++ : idx--;
+    if (index >= 0 && index < self.numberOfImages) {
+        UIImageView *nextImageView = [self imageViewAtIndex:index];
+        nextImageView.alpha = 1.f;
+        [self prepareImageViewForAppearance:nextImageView];
+        CGRect scaledFrame = [self scaledFrameForImageView:nextImageView];
+        self.pageControl.currentPage = index;
 
-    if (idx >= 0 && idx < [self.images count]) {
-        self.imageView.image = self.images[idx];
-        self.pageControl.currentPage = idx;
-
-        CGRect frame = _originalFrame;
-        CGFloat x = left ? self.imageView.superview.frame.size.width : -frame.size.width;
+        CGFloat x = left ? self.containerView.frame.size.width : -scaledFrame.size.width;
         //NSLog(@"x: %f, y: %f, h: %f, w: %f", x, frame.origin.y, frame.size.width, frame.size.height);
-        self.imageView.frame = CGRectMake(x, frame.origin.y, frame.size.width, frame.size.height);
-        self.imageView.transform = CGAffineTransformIdentity;
+        nextImageView.frame = CGRectMake(x, scaledFrame.origin.y, scaledFrame.size.width, scaledFrame.size.height);
+        nextImageView.transform = CGAffineTransformIdentity;
 
-        [self returnToCenter];
+        [self returnImageViewToCenter:nextImageView];
     } else {
-        [self hideSnapshotView];
-        self.pageControl.hidden = YES;
-
-        [UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            self.backgroundView.alpha = 0.0f;
-        } completion:^(BOOL finished) {
-            [self cleanup];
-        }];
+        [self dismissToTargetView];
     }
 }
 
 - (void)dismissToTargetView {
 	[self hideSnapshotView];
+    self.pageControl.hidden = YES;
 
-	if (self.scrollView.zoomScale != 1.0f) {
-		[self.scrollView setZoomScale:1.0f animated:NO];
-	}
-
-    self.imageView.alpha = 0.f;
-    self.backgroundView.alpha = 0.0f;
-    [self cleanup];
+    [UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.backgroundView.alpha = 0.0f;
+        self.currentImageView.alpha = 0.f;
+    } completion:^(BOOL finished) {
+        [self cleanup];
+    }];
 }
 
 #pragma mark - Private Methods
@@ -412,69 +444,34 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	self.blurredSnapshotView = snapshotView;
 }
 
-- (void)adjustFrame {
-	CGRect imageFrame = self.imageView.frame;
-
-	// snap x sides
-	if (CGRectGetWidth(imageFrame) > CGRectGetWidth(self.view.frame)) {
-		if (CGRectGetMinX(imageFrame) > 0) {
-			imageFrame.origin.x = 0;
-		}
-		else if (CGRectGetMaxX(imageFrame) < CGRectGetWidth(self.view.frame)) {
-			imageFrame.origin.x = CGRectGetWidth(self.view.frame) - CGRectGetWidth(imageFrame);
-		}
-	}
-	else if (self.imageView.center.x != CGRectGetMidX(self.view.frame)) {
-		imageFrame.origin.x = CGRectGetMidX(self.view.frame) - CGRectGetWidth(imageFrame) / 2.0f;
-	}
-
-	// snap y sides
-	if (CGRectGetHeight(imageFrame) > CGRectGetHeight(self.view.frame)) {
-		if (CGRectGetMinY(imageFrame) > 0) {
-			imageFrame.origin.y = 0;
-		}
-		else if (CGRectGetMaxY(imageFrame) < CGRectGetHeight(self.view.frame)) {
-			imageFrame.origin.y = CGRectGetHeight(self.view.frame) - CGRectGetHeight(imageFrame);
-		}
-	}
-	else if (self.imageView.center.y != CGRectGetMidY(self.view.frame)) {
-		imageFrame.origin.y = CGRectGetMidY(self.view.frame) - CGRectGetHeight(imageFrame) / 2.0f;
-	}
-
-	[UIView animateWithDuration:0.3f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-		self.imageView.frame = imageFrame;
-	} completion:^(BOOL finished) {
-
-	}];
-}
-
 /**
  *	When adding UIDynamics to a view, it resets `zoomScale` on UIScrollView back to 1.0, which is an issue when applying dynamics
  *	to the imageView when scaled down. So we just scale the imageView.frame while dynamics are applied.
  */
-- (void)scaleImageForDynamics {
+- (void)scaleImageViewForDynamics:(UIImageView *)imageView {
 	_lastZoomScale = self.scrollView.zoomScale;
 
-	CGRect imageFrame = self.imageView.frame;
+	CGRect imageFrame = imageView.frame;
 	imageFrame.size.width *= _lastZoomScale;
 	imageFrame.size.height *= _lastZoomScale;
-	self.imageView.frame = imageFrame;
+	imageView.frame = imageFrame;
 }
 
 - (void)centerScrollViewContents {
 	CGSize contentSize = self.scrollView.contentSize;
 	CGFloat offsetX = (CGRectGetWidth(self.scrollView.frame) > contentSize.width) ? (CGRectGetWidth(self.scrollView.frame) - contentSize.width) / 2.0f : 0.0f;
 	CGFloat offsetY = (CGRectGetHeight(self.scrollView.frame) > contentSize.height) ? (CGRectGetHeight(self.scrollView.frame) - contentSize.height) / 2.0f : 0.0f;
-	self.imageView.center = CGPointMake(self.scrollView.contentSize.width / 2.0f + offsetX, self.scrollView.contentSize.height / 2.0f + offsetY);
+	self.currentImageView.center = CGPointMake(self.scrollView.contentSize.width / 2.0f + offsetX, self.scrollView.contentSize.height / 2.0f + offsetY);
 }
 
-- (void)returnToCenter {
+- (void)returnImageViewToCenter:(UIImageView *)imageView {
 	if (self.animator) {
 		[self.animator removeAllBehaviors];
 	}
+
 	[UIView animateWithDuration:0.25 delay:0 options:0 animations:^{
-		self.imageView.transform = CGAffineTransformIdentity;
-		self.imageView.frame = _originalFrame;
+		imageView.transform = CGAffineTransformIdentity;
+		imageView.frame = [self scaledFrameForImageView:imageView];
 	} completion:nil];
 }
 
@@ -512,10 +509,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	if ([self.delegate respondsToSelector:@selector(mediaFocusViewControllerDidDisappear:)]) {
-		[self.delegate mediaFocusViewControllerDidDisappear:self];
-	}
-
 	if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
 		[self setNeedsStatusBarAppearanceUpdate];
 	}
@@ -524,18 +517,18 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 #pragma mark - Gesture Methods
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)gestureRecognizer {
-	UIView *view = gestureRecognizer.view;
+	UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
 	CGPoint location = [gestureRecognizer locationInView:self.view];
-	CGPoint boxLocation = [gestureRecognizer locationInView:self.imageView];
+	CGPoint boxLocation = [gestureRecognizer locationInView:imageView];
 
 	if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
 		[self.animator removeBehavior:self.pushBehavior];
 
-		UIOffset centerOffset = UIOffsetMake(boxLocation.x - CGRectGetMidX(self.imageView.bounds), boxLocation.y - CGRectGetMidY(self.imageView.bounds));
-		self.panAttachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:self.imageView offsetFromCenter:centerOffset attachedToAnchor:location];
+		UIOffset centerOffset = UIOffsetMake(boxLocation.x - CGRectGetMidX(imageView.bounds), boxLocation.y - CGRectGetMidY(imageView.bounds));
+		self.panAttachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:imageView offsetFromCenter:centerOffset attachedToAnchor:location];
 		[self.animator addBehavior:self.panAttachmentBehavior];
 		[self.animator addBehavior:self.itemBehavior];
-		[self scaleImageForDynamics];
+		[self scaleImageViewForDynamics:imageView];
 	}
 	else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
 		self.panAttachmentBehavior.anchorPoint = location;
@@ -552,7 +545,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		CGFloat velocityAdjust = 10.0f * deviceVelocityScale;
 
 		if (fabs(velocity.x / velocityAdjust) > __minimumVelocityRequiredForPush || fabs(velocity.y / velocityAdjust) > __minimumVelocityRequiredForPush) {
-			UIOffset offsetFromCenter = UIOffsetMake(boxLocation.x - CGRectGetMidX(self.imageView.bounds), boxLocation.y - CGRectGetMidY(self.imageView.bounds));
+			UIOffset offsetFromCenter = UIOffsetMake(boxLocation.x - CGRectGetMidX(imageView.bounds), boxLocation.y - CGRectGetMidY(imageView.bounds));
 			CGFloat radius = sqrtf(powf(offsetFromCenter.horizontal, 2.0f) + powf(offsetFromCenter.vertical, 2.0f));
 			CGFloat pushVelocity = sqrtf(powf(velocity.x, 2.0f) + powf(velocity.y, 2.0f));
 
@@ -570,22 +563,22 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 			// rotation direction is dependent upon which corner was pushed relative to the center of the view
 			// when velocity.y is positive, pushes to the right of center rotate clockwise, left is counterclockwise
-			CGFloat direction = (location.x < view.center.x) ? -1.0f : 1.0f;
+			CGFloat direction = (location.x < imageView.center.x) ? -1.0f : 1.0f;
 			// when y component of velocity is negative, reverse direction
 			if (velocity.y < 0) { direction *= -1; }
 
 			// amount of angular velocity should be relative to how close to the edge of the view the force originated
 			// angular velocity is reduced the closer to the center the force is applied
 			// for angular velocity: positive = clockwise, negative = counterclockwise
-			CGFloat xRatioFromCenter = fabsf(offsetFromCenter.horizontal) / (CGRectGetWidth(self.imageView.frame) / 2.0f);
-			CGFloat yRatioFromCetner = fabsf(offsetFromCenter.vertical) / (CGRectGetHeight(self.imageView.frame) / 2.0f);
+			CGFloat xRatioFromCenter = fabsf(offsetFromCenter.horizontal) / (CGRectGetWidth(imageView.frame) / 2.0f);
+			CGFloat yRatioFromCetner = fabsf(offsetFromCenter.vertical) / (CGRectGetHeight(imageView.frame) / 2.0f);
 
 			// apply device scale to angular velocity
 			angularVelocity *= deviceAngularScale;
 			// adjust angular velocity based on distance from center, force applied farther towards the edges gets more spin
 			angularVelocity *= ((xRatioFromCenter + yRatioFromCetner) / 2.0f);
 
-			[self.itemBehavior addAngularVelocity:angularVelocity * __angularVelocityFactor * direction forItem:self.imageView];
+			[self.itemBehavior addAngularVelocity:angularVelocity * __angularVelocityFactor * direction forItem:imageView];
 			[self.animator addBehavior:self.pushBehavior];
 			self.pushBehavior.pushDirection = CGVectorMake((velocity.x / velocityAdjust) * __velocityFactor, (velocity.y / velocityAdjust) * __velocityFactor);
 			self.pushBehavior.active = YES;
@@ -595,13 +588,13 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
             if (fabs(self.pushBehavior.pushDirection.dx) > __minDirection) {
                 // delay for dismissing is based on push velocity also
                 CGFloat delay = __maximumDismissDelay - (pushVelocity / 10000.0f);
-                [self performSelector:@selector(nextOrDismiss) withObject:nil afterDelay:(delay * deviceDismissDelay) * __velocityFactor];
+                [self performSelector:@selector(nextOrDismissImageView:) withObject:imageView afterDelay:(delay * deviceDismissDelay) * __velocityFactor];
             } else {
-                [self returnToCenter];
+                [self returnImageViewToCenter:imageView];
             }
 		}
 		else {
-			[self returnToCenter];
+			[self returnImageViewToCenter:imageView];
 		}
 	}
 }
@@ -611,11 +604,11 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		[self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
 	}
 	else {
-		CGPoint tapPoint = [self.imageView convertPoint:[gestureRecognizer locationInView:gestureRecognizer.view] fromView:self.scrollView];
+		CGPoint tapPoint = [self.currentImageView convertPoint:[gestureRecognizer locationInView:gestureRecognizer.view] fromView:self.scrollView];
 		CGFloat newZoomScale = self.scrollView.maximumZoomScale;
 
-		CGFloat w = CGRectGetWidth(self.imageView.frame) / newZoomScale;
-		CGFloat h = CGRectGetHeight(self.imageView.frame) / newZoomScale;
+		CGFloat w = CGRectGetWidth(self.currentImageView.frame) / newZoomScale;
+		CGFloat h = CGRectGetHeight(self.currentImageView.frame) / newZoomScale;
 		CGRect zoomRect = CGRectMake(tapPoint.x - (w / 2.0f), tapPoint.y - (h / 2.0f), w, h);
 
 		[self.scrollView zoomToRect:zoomRect animated:YES];
@@ -628,13 +621,13 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	// if we are allowing a tap anywhere to dismiss, check if we allow taps within image bounds to dismiss also
 	// otherwise a tap outside image bounds will only be able to dismiss
 	if (self.shouldDismissOnTap) {
-		if (self.shouldDismissOnImageTap || !CGRectContainsPoint(self.imageView.frame, location)) {
+		if (self.shouldDismissOnImageTap || !CGRectContainsPoint(self.currentImageView.frame, location)) {
 			[self dismissToTargetView];
             return;
 		}
 	}
 
-	if (self.shouldDismissOnImageTap && CGRectContainsPoint(self.imageView.frame, location)) {
+	if (self.shouldDismissOnImageTap && CGRectContainsPoint(self.currentImageView.frame, location)) {
 		// we aren't allowing taps outside of image bounds to dismiss, but tap was detected on image view, we can dismiss
 		[self dismissToTargetView];
         return;
@@ -644,20 +637,20 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 #pragma mark - UIScrollViewDelegate Methods
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-	return self.imageView;
+	return self.currentImageView;
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
 	// zoomScale of 1.0 is always our starting point, so anything other than that we disable the pan gesture recognizer
 	if (scrollView.zoomScale <= 1.0f && !scrollView.zooming) {
 		if (self.panRecognizer) {
-			[self.imageView addGestureRecognizer:self.panRecognizer];
+			[self.currentImageView addGestureRecognizer:self.panRecognizer];
 		}
 		scrollView.scrollEnabled = NO;
 	}
 	else {
 		if (self.panRecognizer) {
-			[self.imageView removeGestureRecognizer:self.panRecognizer];
+			[self.currentImageView removeGestureRecognizer:self.panRecognizer];
 		}
 		scrollView.scrollEnabled = YES;
 	}
@@ -667,7 +660,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 #pragma mark - UIGestureRecognizerDelegate Methods
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-	CGFloat transformScale = self.imageView.transform.a;
+	CGFloat transformScale = self.currentImageView.transform.a;
 	BOOL shouldRecognize = transformScale > _minScale;
 
 	// make sure tap and double tap gestures aren't recognized simultaneously
@@ -709,7 +702,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	CGAffineTransform baseTransform = [self transformForOrientation:_currentOrientation];
 
 	// determine if the rotation we're about to undergo is 90 or 180 degrees
-	CGAffineTransform t1 = self.imageView.transform;
+	CGAffineTransform t1 = self.currentImageView.transform;
 	CGAffineTransform t2 = baseTransform;
 	CGFloat dot = t1.a * t2.a + t1.c * t2.c;
 	CGFloat n1 = sqrtf(t1.a * t1.a + t1.c * t1.c);

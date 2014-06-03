@@ -44,12 +44,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 @interface TTImageViewerController () <UIScrollViewDelegate>
 
-//@property (nonatomic, strong) UIView *fromView;
-//@property (nonatomic, assign) CGRect fromRect;
-
-//@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *backgroundView;
 @property (nonatomic, strong) UIDynamicAnimator *animator;
 @property (nonatomic, strong) UIPushBehavior *pushBehavior;
@@ -119,10 +114,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	self.scrollView.showsVerticalScrollIndicator = NO;
 	self.scrollView.scrollEnabled = NO;
 	[self.view addSubview:self.scrollView];
-
-	self.containerView = [[UIView alloc] initWithFrame:self.view.bounds];
-	self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-	[self.scrollView addSubview:self.containerView];
 
     CGFloat pageControlHeight = 20.f;
     CGFloat pageControlBottomMargin = 5.f;
@@ -252,7 +243,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
         [self.currentImageView removeGestureRecognizer:self.panRecognizer];
     }
 
-    [self.containerView addSubview:imageView];
+    [self.scrollView addSubview:imageView];
     [self prepareScrollViewForImageView:imageView];
     [self.pushBehavior addItem:imageView];
     [self.itemBehavior addItem:imageView];
@@ -282,19 +273,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	_maxScale = self.scrollView.maximumZoomScale;
 	_lastPinchScale = 1.0f;
 }
-
-//- (void)showImageAtIndex:(NSUInteger)index fromView:(UIView *)fromView {
-//
-//    self.currentImageView = imageView;
-//
-//	// since UIWindow always use portrait orientation in convertRect:inView:, we need to convert the source view's frame to
-//	// this controller's view based on the current interface orientation
-////	CGRect fromRect = [self convertRect:fromView.frame forOrientation:_currentOrientation];
-//	//NSLog(@"fromRect=%@", NSStringFromCGRect(self.fromRect));
-//
-//
-//
-//}
 
 - (UIImageView *)imageViewAtIndex:(NSUInteger)index {
     if (!self.imageViews[@(index)]) {
@@ -350,7 +328,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
         CGRect scaledFrame = [self scaledFrameForImageView:nextImageView];
         self.pageControl.currentPage = index;
 
-        CGFloat x = left ? self.containerView.frame.size.width : -scaledFrame.size.width;
+        CGFloat x = left ? self.scrollView.frame.size.width : -scaledFrame.size.width;
         //NSLog(@"x: %f, y: %f, h: %f, w: %f", x, frame.origin.y, frame.size.width, frame.size.height);
         nextImageView.frame = CGRectMake(x, scaledFrame.origin.y, scaledFrame.size.width, scaledFrame.size.height);
         nextImageView.transform = CGAffineTransformIdentity;
@@ -600,7 +578,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 }
 
 - (void)handleDoubleTapGesture:(UITapGestureRecognizer *)gestureRecognizer {
-	if (self.scrollView.zoomScale != self.scrollView.minimumZoomScale) {
+    if (self.scrollView.zoomScale != self.scrollView.minimumZoomScale) {
 		[self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
 	}
 	else {
@@ -721,11 +699,11 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	// if we haven't laid out the subviews yet, we don't want to animate rotation and position transforms
 	if (_hasLaidOut) {
 		[UIView animateWithDuration:duration animations:^{
-			self.containerView.transform = CGAffineTransformConcat(CGAffineTransformIdentity, baseTransform);
+			self.currentImageView.transform = CGAffineTransformConcat(CGAffineTransformIdentity, baseTransform);
 		}];
 	}
 	else {
-		self.containerView.transform = CGAffineTransformConcat(CGAffineTransformIdentity, baseTransform);
+		self.currentImageView.transform = CGAffineTransformConcat(CGAffineTransformIdentity, baseTransform);
 	}
 }
 

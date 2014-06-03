@@ -88,7 +88,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		self.parallaxEnabled = YES;
 		self.shouldDismissOnTap = YES;
 		self.shouldDismissOnImageTap = NO;
-		self.shouldRotateToDeviceOrientation = YES;
+		self.shouldRotateToDeviceOrientation = NO;
 	}
 	return self;
 }

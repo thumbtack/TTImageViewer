@@ -124,7 +124,11 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     self.pageControl.alpha = 0.f;
     [self.view addSubview:self.pageControl];
 
-    UIImage *doneImage = [UIImage imageNamed:@"TTImageViewerDone"];
+    UIImage *doneImage = [UIImage imageNamed:@"TTImageViewer.bundle/TTImageViewerDone"];
+    if (!doneImage) {
+        doneImage = [UIImage imageNamed:@"TTImageViewerDone"];
+    }
+
     self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.doneButton setBackgroundImage:doneImage forState:UIControlStateNormal];
     self.doneButton.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3f];

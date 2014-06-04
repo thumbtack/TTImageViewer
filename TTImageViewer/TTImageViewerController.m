@@ -291,7 +291,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 - (UIView *)buildImageViewAtIndex:(NSUInteger)index {
     UIView *imageView = [self.delegate imageViewer:self imageViewForImageAtIndex:index];
-	imageView.contentMode = UIViewContentModeScaleAspectFit;
 	imageView.alpha = 0.0f;
 	imageView.userInteractionEnabled = YES;
 

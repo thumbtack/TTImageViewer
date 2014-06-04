@@ -146,6 +146,17 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     /* UIDynamics stuff */
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
     self.animator.delegate = self;
+
+    self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[] mode:UIPushBehaviorModeInstantaneous];
+    self.pushBehavior.angle = 0.0f;
+    self.pushBehavior.magnitude = 0.0f;
+
+    self.itemBehavior = [[UIDynamicItemBehavior alloc] init];
+    self.itemBehavior.elasticity = 0.0f;
+    self.itemBehavior.friction = 0.2f;
+    self.itemBehavior.allowsRotation = YES;
+    self.itemBehavior.density = __density;
+    self.itemBehavior.resistance = __resistance;
 }
 
 - (void)showFromView:(UIView *)fromView withInitialIndex:(NSUInteger)index {
@@ -244,6 +255,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 - (void)prepareImageViewForAppearance:(UIView *)imageView {
     if (self.currentImageView) {
+        self.currentImageView.transform = CGAffineTransformIdentity;
         [self.currentImageView removeFromSuperview];
         [self.pushBehavior removeItem:self.currentImageView];
         [self.itemBehavior removeItem:self.currentImageView];
@@ -252,6 +264,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     }
 
     self.currentImageView = imageView;
+    self.currentImageView.transform = CGAffineTransformIdentity;
     [self prepareScrollViewForImageView:imageView];
     [self.scrollView addSubview:imageView];
     [self.pushBehavior addItem:imageView];
@@ -261,24 +274,18 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 }
 
 - (void)prepareScrollViewForImageView:(UIView *)imageView {
-    self.scrollView.zoomScale = 1.0f;
 	self.scrollView.contentSize = imageView.frame.size;
-	CGFloat scale = [self scaleForImageView:imageView];
 
 	// rotate imageView based on current device orientation
 	[self reposition];
 
-	if (scale < 1.0f) {
-		self.scrollView.minimumZoomScale = 1.0f;
-		self.scrollView.maximumZoomScale = 1.0f / scale;
-	}
-	else {
-		self.scrollView.minimumZoomScale = 1.0f / scale;
-		self.scrollView.maximumZoomScale = 1.0f;
-	}
+    self.scrollView.minimumZoomScale = 1.f;
+    self.scrollView.maximumZoomScale = 2.f;
+    self.scrollView.zoomScale = self.scrollView.minimumZoomScale;
 
 	_minScale = self.scrollView.minimumZoomScale;
 	_maxScale = self.scrollView.maximumZoomScale;
+
 	_lastPinchScale = 1.0f;
 }
 
@@ -300,17 +307,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		imageView.layer.allowsEdgeAntialiasing = YES;
 	}
 
-    self.pushBehavior = [[UIPushBehavior alloc] initWithItems:@[] mode:UIPushBehaviorModeInstantaneous];
-    self.pushBehavior.angle = 0.0f;
-    self.pushBehavior.magnitude = 0.0f;
-
-    self.itemBehavior = [[UIDynamicItemBehavior alloc] init];
-    self.itemBehavior.elasticity = 0.0f;
-    self.itemBehavior.friction = 0.2f;
-    self.itemBehavior.allowsRotation = YES;
-    self.itemBehavior.density = __density;
-    self.itemBehavior.resistance = __resistance;
-
     return imageView;
 }
 
@@ -331,9 +327,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
         self.pageControl.currentPage = index;
 
         CGFloat x = left ? self.scrollView.frame.size.width : -scaledFrame.size.width;
-        //NSLog(@"x: %f, y: %f, h: %f, w: %f", x, frame.origin.y, frame.size.width, frame.size.height);
         nextImageView.frame = CGRectMake(x, scaledFrame.origin.y, scaledFrame.size.width, scaledFrame.size.height);
-        nextImageView.transform = CGAffineTransformIdentity;
 
         [self returnImageViewToCenter:nextImageView];
     } else {
@@ -343,7 +337,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 - (void)dismissToTargetView {
 	[self hideSnapshotView];
-    self.pageControl.hidden = YES;
+    self.pageControl.alpha = 0.f;
     self.currentImageView.hidden = YES;
     
     [UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -450,7 +444,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	}
 
 	[UIView animateWithDuration:0.25 delay:0 options:0 animations:^{
-		imageView.transform = CGAffineTransformIdentity;
+        imageView.transform = CGAffineTransformIdentity;
 		imageView.frame = [self scaledFrameForImageView:imageView];
 	} completion:nil];
 }
@@ -563,8 +557,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 			self.pushBehavior.pushDirection = CGVectorMake((velocity.x / velocityAdjust) * __velocityFactor, (velocity.y / velocityAdjust) * __velocityFactor);
 			self.pushBehavior.active = YES;
 
-            //NSLog(@"direction x: %f, y %f", self.pushBehavior.pushDirection.dx, self.pushBehavior.pushDirection.dy);
-
             if (fabs(self.pushBehavior.pushDirection.dx) > __minDirection) {
                 // delay for dismissing is based on push velocity also
                 CGFloat delay = __maximumDismissDelay - (pushVelocity / 10000.0f);
@@ -582,16 +574,8 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 - (void)handleDoubleTapGesture:(UITapGestureRecognizer *)gestureRecognizer {
     if (self.scrollView.zoomScale != self.scrollView.minimumZoomScale) {
 		[self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
-	}
-	else {
-		CGPoint tapPoint = [self.currentImageView convertPoint:[gestureRecognizer locationInView:gestureRecognizer.view] fromView:self.scrollView];
-		CGFloat newZoomScale = self.scrollView.maximumZoomScale;
-
-		CGFloat w = CGRectGetWidth(self.currentImageView.frame) / newZoomScale;
-		CGFloat h = CGRectGetHeight(self.currentImageView.frame) / newZoomScale;
-		CGRect zoomRect = CGRectMake(tapPoint.x - (w / 2.0f), tapPoint.y - (h / 2.0f), w, h);
-
-		[self.scrollView zoomToRect:zoomRect animated:YES];
+	} else {
+        [self.scrollView setZoomScale:self.scrollView.maximumZoomScale animated:YES];
 	}
 }
 
@@ -622,7 +606,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
 	// zoomScale of 1.0 is always our starting point, so anything other than that we disable the pan gesture recognizer
-	if (scrollView.zoomScale <= 1.0f && !scrollView.zooming) {
+	if (scrollView.zoomScale == self.scrollView.minimumZoomScale && !scrollView.zooming) {
 		if (self.panRecognizer) {
 			[self.currentImageView addGestureRecognizer:self.panRecognizer];
 		}

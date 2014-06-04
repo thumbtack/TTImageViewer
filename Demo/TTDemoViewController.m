@@ -27,7 +27,7 @@
     NSInteger initialOffset = 20;
 
     for (image in [self images]) {
-        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, initialOffset + (i * 130), 120, 120)];
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(100, initialOffset + (i * 70), 60, 60)];
         imageView.image = image;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.userInteractionEnabled = YES;
@@ -53,7 +53,7 @@
     if (_images) return _images;
     _images = [[NSMutableArray alloc] init];
 
-    for (NSString *name in @[@"tesla", @"img2", @"img3", @"img4"]) {
+    for (NSString *name in @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8"]) {
         [_images addObject:[UIImage imageNamed:name]];
     }
 
@@ -64,11 +64,12 @@
 #pragma mark - TTImageViewerControllerDelegate
 
 - (NSUInteger)numberOfImagesInImageViewer:(TTImageViewerController *)imageViewer {
-    return 4;
+    return [self.images count];
 }
 
-- (UIImageView *)imageViewer:(TTImageViewerController *)imageViewer imageViewForImageAtIndex:(NSUInteger)index {
+- (UIView *)imageViewer:(TTImageViewerController *)imageViewer imageViewForImageAtIndex:(NSUInteger)index {
     UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
     imageView.image = [self images][index];
     imageView.frame = CGRectMake(0, 0, imageView.image.size.width, imageView.image.size.height);
     return imageView;

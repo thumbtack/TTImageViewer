@@ -124,21 +124,16 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     self.pageControl.alpha = 0.f;
     [self.view addSubview:self.pageControl];
 
-    self.doneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.doneButton setTitle:@"Done" forState:UIControlStateNormal];
-    [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.doneButton.layer.borderColor = [[UIColor whiteColor] CGColor];
-    self.doneButton.layer.borderWidth = 1.f;
-    self.doneButton.layer.cornerRadius = 10.f;
+    UIImage *doneImage = [UIImage imageNamed:@"TTImageViewerDone"];
+    self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.doneButton setBackgroundImage:doneImage forState:UIControlStateNormal];
     self.doneButton.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3f];
-    [self.doneButton.titleLabel setFont:[UIFont systemFontOfSize:18.f]];
+    self.doneButton.layer.cornerRadius = doneImage.size.width / 2.f;
     NSUInteger buttonMargin = 20.f;
-    NSUInteger buttonWidth = 70.f;
-    NSUInteger buttonX = self.scrollView.frame.size.width - buttonWidth - buttonMargin;
+    NSUInteger buttonX = self.scrollView.frame.size.width - doneImage.size.width - buttonMargin;
     self.doneButton.alpha = 0.f;
-    self.doneButton.frame = CGRectMake(buttonX, buttonMargin, buttonWidth, 40);
+    self.doneButton.frame = CGRectMake(buttonX, buttonMargin, doneImage.size.width, doneImage.size.height);
     [self.doneButton addTarget:self action:@selector(dismissToTargetView) forControlEvents:UIControlEventTouchUpInside];
-
     [self.view addSubview:self.doneButton];
 
     // pan gesture to handle the physics

@@ -31,7 +31,6 @@
 		3C20A9B21937DE9100709EE1 /* TTDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A9B11937DE9100709EE1 /* TTDemoViewController.m */; };
 		3C20A9B31937E45000709EE1 /* TTImageViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C20A8F01937DA5B00709EE1 /* TTImageViewerController.m */; };
 		3C20A9B51937E6E400709EE1 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C20A9B41937E6E400709EE1 /* LICENSE */; };
-		3C511399193FBF280082FF12 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C511398193FBDF40082FF12 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,7 +91,8 @@
 		3C20A9B01937DE9100709EE1 /* TTDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDemoViewController.h; sourceTree = "<group>"; };
 		3C20A9B11937DE9100709EE1 /* TTDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDemoViewController.m; sourceTree = "<group>"; };
 		3C20A9B41937E6E400709EE1 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		3C511398193FBDF40082FF12 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		3C901D97193FC8BB00D4723F /* TTImageViewerDone */ = {isa = PBXFileReference; lastKnownFileType = file; name = TTImageViewerDone; path = Resources/TTImageViewerDone; sourceTree = "<group>"; };
+		3C901D99193FC8CD00D4723F /* TTImageViewerDone@2x */ = {isa = PBXFileReference; lastKnownFileType = file; name = "TTImageViewerDone@2x"; path = "Resources/TTImageViewerDone@2x"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,10 +176,10 @@
 		3C20A8EB1937DA5B00709EE1 /* TTImageViewer */ = {
 			isa = PBXGroup;
 			children = (
+				3C901D96193FC8A000D4723F /* Resources */,
 				3C20A8EE1937DA5B00709EE1 /* TTImageViewerController.h */,
 				3C20A8F01937DA5B00709EE1 /* TTImageViewerController.m */,
 				3C20A8EC1937DA5B00709EE1 /* Supporting Files */,
-				3C511398193FBDF40082FF12 /* Images.xcassets */,
 			);
 			path = TTImageViewer;
 			sourceTree = "<group>";
@@ -250,6 +250,15 @@
 				3C20A9A51937DE4100709EE1 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3C901D96193FC8A000D4723F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3C901D99193FC8CD00D4723F /* TTImageViewerDone@2x */,
+				3C901D97193FC8BB00D4723F /* TTImageViewerDone */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -376,7 +385,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C20A9B51937E6E400709EE1 /* LICENSE in Resources */,
-				3C511399193FBF280082FF12 /* Images.xcassets in Resources */,
 				3C20A98F1937DE4100709EE1 /* InfoPlist.strings in Resources */,
 				3C20A9971937DE4100709EE1 /* Images.xcassets in Resources */,
 			);

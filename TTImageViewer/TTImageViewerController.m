@@ -61,7 +61,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 @property (nonatomic, strong) NSMutableDictionary *imageViews;
 @property (nonatomic, strong) UIPageControl *pageControl;
-@property (nonatomic, strong) UIImageView *currentImageView;
+@property (nonatomic, strong) UIView *currentImageView;
 @property (nonatomic, assign) NSUInteger numberOfImages;
 @property (nonatomic, strong) NSMutableDictionary *scaledImageViewFrames;
 @property (nonatomic, strong) NSMutableDictionary *imageViewScales;
@@ -173,7 +173,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 		}
 	}
 
-    UIImageView *imageView = [self imageViewAtIndex:index];
+    UIView *imageView = [self imageViewAtIndex:index];
     [self prepareImageViewForAppearance:imageView];
     CGRect scaledFrame = [self scaledFrameForImageView:imageView];
     imageView.frame = fromView.frame;
@@ -212,7 +212,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	} completion:nil];
 }
 
-- (CGFloat)scaleForImageView:(UIImageView *)imageView {
+- (CGFloat)scaleForImageView:(UIView *)imageView {
     NSString *key = [NSString stringWithFormat:@"%p", imageView];
 
     if (!self.imageViewScales[key]) {
@@ -224,7 +224,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     return [self.imageViewScales[key] floatValue];
 }
 
-- (CGRect)scaledFrameForImageView:(UIImageView *)imageView {
+- (CGRect)scaledFrameForImageView:(UIView *)imageView {
     CGRect scaledFrame;
     NSString *key = [NSString stringWithFormat:@"%p", imageView];
 
@@ -242,7 +242,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     return [self.scaledImageViewFrames[key] CGRectValue];
 }
 
-- (void)prepareImageViewForAppearance:(UIImageView *)imageView {
+- (void)prepareImageViewForAppearance:(UIView *)imageView {
     if (self.currentImageView) {
         [self.currentImageView removeFromSuperview];
         [self.pushBehavior removeItem:self.currentImageView];
@@ -260,7 +260,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     [imageView addGestureRecognizer:self.panRecognizer];
 }
 
-- (void)prepareScrollViewForImageView:(UIImageView *)imageView {
+- (void)prepareScrollViewForImageView:(UIView *)imageView {
     self.scrollView.zoomScale = 1.0f;
 	self.scrollView.contentSize = imageView.frame.size;
 	CGFloat scale = [self scaleForImageView:imageView];
@@ -282,15 +282,15 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	_lastPinchScale = 1.0f;
 }
 
-- (UIImageView *)imageViewAtIndex:(NSUInteger)index {
+- (UIView *)imageViewAtIndex:(NSUInteger)index {
     if (!self.imageViews[@(index)]) {
         self.imageViews[@(index)] = [self buildImageViewAtIndex:index];
     }
     return self.imageViews[@(index)];
 }
 
-- (UIImageView *)buildImageViewAtIndex:(NSUInteger)index {
-    UIImageView *imageView = [self.delegate imageViewer:self imageViewForImageAtIndex:index];
+- (UIView *)buildImageViewAtIndex:(NSUInteger)index {
+    UIView *imageView = [self.delegate imageViewer:self imageViewForImageAtIndex:index];
 	imageView.contentMode = UIViewContentModeScaleAspectFit;
 	imageView.alpha = 0.0f;
 	imageView.userInteractionEnabled = YES;
@@ -315,7 +315,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     return imageView;
 }
 
-- (void)nextOrDismissImageView:(UIImageView *)imageView {
+- (void)nextOrDismissImageView:(UIView *)imageView {
     [self.animator removeBehavior:self.pushBehavior];
     [self.animator removeBehavior:self.itemBehavior];
 
@@ -325,7 +325,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     left ? index++ : index--;
 
     if (index >= 0 && index < self.numberOfImages) {
-        UIImageView *nextImageView = [self imageViewAtIndex:index];
+        UIView *nextImageView = [self imageViewAtIndex:index];
         nextImageView.alpha = 1.f;
         [self prepareImageViewForAppearance:nextImageView];
         CGRect scaledFrame = [self scaledFrameForImageView:nextImageView];
@@ -429,7 +429,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
  *	When adding UIDynamics to a view, it resets `zoomScale` on UIScrollView back to 1.0, which is an issue when applying dynamics
  *	to the imageView when scaled down. So we just scale the imageView.frame while dynamics are applied.
  */
-- (void)scaleImageViewForDynamics:(UIImageView *)imageView {
+- (void)scaleImageViewForDynamics:(UIView *)imageView {
 	_lastZoomScale = self.scrollView.zoomScale;
 
 	CGRect imageFrame = imageView.frame;
@@ -445,7 +445,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	self.currentImageView.center = CGPointMake(self.scrollView.contentSize.width / 2.0f + offsetX, self.scrollView.contentSize.height / 2.0f + offsetY);
 }
 
-- (void)returnImageViewToCenter:(UIImageView *)imageView {
+- (void)returnImageViewToCenter:(UIView *)imageView {
 	if (self.animator) {
 		[self.animator removeAllBehaviors];
 	}
@@ -498,7 +498,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 #pragma mark - Gesture Methods
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)gestureRecognizer {
-	UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
+	UIView *imageView = (UIView *)gestureRecognizer.view;
 	CGPoint location = [gestureRecognizer locationInView:self.view];
 	CGPoint boxLocation = [gestureRecognizer locationInView:imageView];
 

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name				= 'TTImageViewer'
-	s.version			= '0.6'
+	s.version			= '0.7'
 	s.summary			= 'Image viewer for Thumbtack apps. Originally based on github.com/u10int/URBMediaFocusViewController.'
 	s.homepage		= 'https://github.com/thumbtack/TTImageViewer'
 	s.author = {
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
 	s.license			= { :type => 'MIT', :file => 'LICENSE' }
 	s.requires_arc		= true
 	s.source_files		= 'TTImageViewer/TTImageViewerController.{h,m}'
-	s.resource_bundles = { 'TTImageViewer' => 'TTImageViewer/Images.xcassets/*.png' }
+	s.resource_bundles = { 'TTImageViewer' => 'TTImageViewer/Images.xcassets/**/*.png' }
 	s.header_mappings_dir = 'TTImageViewer'
 	s.frameworks		= 'UIKit', 'Foundation', 'CoreGraphics', 'QuartzCore', 'AssetsLibrary'
 	s.ios.deployment_target = '7.0'

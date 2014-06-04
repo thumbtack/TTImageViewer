@@ -203,7 +203,8 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     UIView *imageView = [self imageViewAtIndex:index];
     [self prepareImageViewForAppearance:imageView];
     CGRect scaledFrame = [self scaledFrameForImageView:imageView];
-    imageView.frame = fromView.frame;
+    CGRect fromViewFrame = [fromView convertRect:fromView.bounds toView:nil];
+    imageView.frame = fromViewFrame;
 
     _hasLaidOut = YES;
 
@@ -369,32 +370,6 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 
 - (UIWindow *)keyWindow {
 	return [UIApplication sharedApplication].keyWindow;
-}
-
-- (CGRect)windowBounds {
-	CGRect windowBounds = [UIScreen mainScreen].bounds;
-
-	if (UIInterfaceOrientationIsLandscape(_currentOrientation)) {
-		windowBounds.size.width = windowBounds.size.height;
-		windowBounds.size.height = CGRectGetWidth([UIScreen mainScreen].bounds);
-	}
-
-    return windowBounds;
-}
-
-- (CGRect)convertRect:(CGRect)rect forOrientation:(UIInterfaceOrientation)orientation {
-	if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-		rect.origin.x = CGRectGetWidth(self.view.frame) - CGRectGetWidth(rect) - CGRectGetMinX(rect);
-		rect.origin.y = CGRectGetHeight(self.view.frame) - CGRectGetHeight(rect) - CGRectGetMinY(rect);
-	}
-	else if (orientation == UIInterfaceOrientationLandscapeLeft) {
-		rect.origin = CGPointMake(CGRectGetHeight(self.view.frame) - CGRectGetHeight(rect) - CGRectGetMinY(rect), CGRectGetMinX(rect));
-	}
-	else if (orientation == UIInterfaceOrientationLandscapeRight) {
-		rect.origin = CGPointMake(CGRectGetMinY(rect), CGRectGetWidth(self.view.frame) - CGRectGetWidth(rect) - CGRectGetMinX(rect));
-	}
-
-	return rect;
 }
 
 - (void)createViewsForBackground {

@@ -46,7 +46,7 @@
 
     self.viewer = [[TTImageViewerController alloc] init];
     self.viewer.delegate = self;
-    [self.viewer showFromView:imageView withInitialIndex:0];
+    [self.viewer showFromView:imageView withInitialIndex:[[self images] indexOfObject:imageView.image]];
 }
 
 - (NSArray *)images {

@@ -65,6 +65,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 @property (nonatomic, assign) NSUInteger numberOfImages;
 @property (nonatomic, strong) NSMutableDictionary *scaledImageViewFrames;
 @property (nonatomic, strong) NSMutableDictionary *imageViewScales;
+@property (nonatomic, strong) UIButton *doneButton;
 
 @end
 
@@ -121,8 +122,24 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
     CGFloat y = self.keyWindow.frame.size.height - pageControlHeight - pageControlBottomMargin;
     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, y, self.keyWindow.frame.size.width, 20)];
     self.pageControl.alpha = 0.f;
-
     [self.view addSubview:self.pageControl];
+
+    self.doneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.doneButton setTitle:@"Done" forState:UIControlStateNormal];
+    [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.doneButton.layer.borderColor = [[UIColor whiteColor] CGColor];
+    self.doneButton.layer.borderWidth = 1.f;
+    self.doneButton.layer.cornerRadius = 10.f;
+    self.doneButton.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3f];
+    [self.doneButton.titleLabel setFont:[UIFont systemFontOfSize:18.f]];
+    NSUInteger buttonMargin = 20.f;
+    NSUInteger buttonWidth = 70.f;
+    NSUInteger buttonX = self.scrollView.frame.size.width - buttonWidth - buttonMargin;
+    self.doneButton.alpha = 0.f;
+    self.doneButton.frame = CGRectMake(buttonX, buttonMargin, buttonWidth, 40);
+    [self.doneButton addTarget:self action:@selector(dismissToTargetView) forControlEvents:UIControlEventTouchUpInside];
+
+    [self.view addSubview:self.doneButton];
 
     // pan gesture to handle the physics
     self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
@@ -210,6 +227,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 	[UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 		self.backgroundView.alpha = 1.0f;
         self.pageControl.alpha = 1.0f;
+        self.doneButton.alpha = 1.0f;
 		imageView.alpha = 1.0f;
 		imageView.frame = scaledFrame;
 
@@ -338,6 +356,7 @@ static const CGFloat __blurTintColorAlpha = 0.2f;				// defines how much to tint
 - (void)dismissToTargetView {
 	[self hideSnapshotView];
     self.pageControl.alpha = 0.f;
+    self.doneButton.alpha = 0.f;
     self.currentImageView.hidden = YES;
     
     [UIView animateWithDuration:__animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{

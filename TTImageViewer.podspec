@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name				= 'TTImageViewer'
-	s.version			= '1.0'
+	s.version			= '1.0.1'
 	s.summary			= 'Image viewer for Thumbtack apps. Originally based on github.com/u10int/URBMediaFocusViewController.'
 	s.homepage		= 'https://github.com/thumbtack/TTImageViewer'
 	s.author = {

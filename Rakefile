@@ -34,7 +34,7 @@ end
 desc "Release a new version of the Pod (append repo=name to push to a private spec repo)"
 task :release do
   # Allow override of spec repo name using `repo=private` after task name
-  repo = ENV["repo"] || "master"
+  repo = ENV["repo"] || "thumbtack"
 
   puts "* Running version"
   sh "rake version"
@@ -66,12 +66,11 @@ task :release do
   sh "git push origin master"
   sh "git push origin --tags"
 
-  puts "*** Skipping pod push."
-  # if repo == "master"
-  #   sh "pod trunk push #{podspec_path}"
-  # else
-  #   sh "pod repo push #{repo} #{podspec_path}"
-  # end
+  if repo == "master"
+    sh "pod trunk push #{podspec_path}"
+  else
+    sh "pod repo push #{repo} #{podspec_path}"
+  end
 end
 
 # @return [Pod::Version] The version as reported by the Podspec.
